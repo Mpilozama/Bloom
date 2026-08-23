@@ -5,7 +5,9 @@ function App() {
 
   return (
     <main>
-      <h1>Welcome to Bloom 🌸</h1>
+      <h1 className="text-5xl font-bold text-pink-500">
+        Welcome to Bloom 🌸
+      </h1>
 
       <p>How much do you have in you today?</p>
 
