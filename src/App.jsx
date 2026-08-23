@@ -4,36 +4,78 @@ function App() {
   const [capacity, setCapacity] = useState(null);
 
   return (
-    <main>
-      <h1 className="text-5xl font-bold text-pink-500">
-        Welcome to Bloom 🌸
-      </h1>
+    <main className="min-h-screen bg-green-50 flex items-center justify-center p-6">
+      <section className="w-full max-w-md text-center">
 
-      <p>How much do you have in you today?</p>
+        <div className="mb-8">
+          <div className="text-7xl mb-4">
+            🐾
+          </div>
 
-      <button onClick={() => setCapacity("little")}>
-        A little
-      </button>
+          <h1 className="text-4xl font-bold text-green-900">
+            Bloom
+          </h1>
 
-      <button onClick={() => setCapacity("some")}>
-        Some
-      </button>
+          <p className="mt-3 text-lg text-green-800">
+            A little place to pause, breathe, and be.
+          </p>
+        </div>
 
-      <button onClick={() => setCapacity("time")}>
-        I've got time
-      </button>
+        <div className="bg-white rounded-3xl shadow-lg p-6">
+          <h2 className="text-2xl font-semibold text-gray-900">
+            How much do you have in you today?
+          </h2>
 
-      {capacity === "little" && (
-        <p>🐾 That's okay. We can keep it tiny today.</p>
-      )}
+          <p className="mt-2 mb-6 text-gray-500">
+            There is no right answer.
+          </p>
 
-      {capacity === "some" && (
-        <p>🐾 Okay. Let's find something that feels manageable.</p>
-      )}
+          <div className="space-y-3">
 
-      {capacity === "time" && (
-        <p>🐾 Lovely. We can explore a little more together.</p>
-      )}
+            <button
+              onClick={() => setCapacity("little")}
+              className="w-full rounded-2xl bg-green-100 px-5 py-4 text-green-900 font-medium hover:bg-green-200 transition"
+            >
+              🌱 A little
+            </button>
+
+            <button
+              onClick={() => setCapacity("some")}
+              className="w-full rounded-2xl bg-green-100 px-5 py-4 text-green-900 font-medium hover:bg-green-200 transition"
+            >
+              🌿 Some
+            </button>
+
+            <button
+              onClick={() => setCapacity("time")}
+              className="w-full rounded-2xl bg-green-100 px-5 py-4 text-green-900 font-medium hover:bg-green-200 transition"
+            >
+              🌸 I've got time
+            </button>
+
+          </div>
+
+          {capacity === "little" && (
+            <p className="mt-6 text-green-800">
+              🐾 That's okay. We can keep it tiny today.
+            </p>
+          )}
+
+          {capacity === "some" && (
+            <p className="mt-6 text-green-800">
+              🐾 Okay. Let's find something that feels manageable.
+            </p>
+          )}
+
+          {capacity === "time" && (
+            <p className="mt-6 text-green-800">
+              🐾 Lovely. We can explore a little more together.
+            </p>
+          )}
+
+        </div>
+
+      </section>
     </main>
   );
 }
