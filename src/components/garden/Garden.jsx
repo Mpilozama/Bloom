@@ -17,13 +17,13 @@ function Garden() {
       </div>
 
       {/* Flowers */}
-      <div className="absolute bottom-8 left-1/4 text-3xl">
+      <div className="absolute bottom-8 left-1/4 z-10 text-3xl">
         🌸
-      </div>
+        </div>
 
-      <div className="absolute bottom-10 right-1/4 text-3xl">
+        <div className="absolute bottom-10 right-1/4 z-10 text-3xl">
         🌼
-      </div>
+        </div>
 
       {/* Ground */}
       <div className="absolute bottom-0 h-16 w-full bg-green-200" />
