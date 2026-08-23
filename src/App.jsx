@@ -1,3 +1,5 @@
+
+import Garden from "./components/garden/Garden";
 import { useState } from "react";
 
 function App() {
@@ -6,6 +8,8 @@ function App() {
   return (
     <main className="min-h-screen bg-green-50 flex items-center justify-center p-6">
       <section className="w-full max-w-md text-center">
+
+        <Garden />
 
         <div className="mb-8">
           <div className="text-7xl mb-4">
