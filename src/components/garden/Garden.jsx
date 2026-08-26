@@ -16,17 +16,24 @@ function Garden() {
         🌳
       </div>
 
+      {/* Ground */}
+      <div className="absolute bottom-0 h-16 w-full bg-green-200" />
+
       {/* Flowers */}
       <div className="absolute bottom-8 left-1/4 z-10 text-3xl">
         🌸
-        </div>
+      </div>
 
-        <div className="absolute bottom-10 right-1/4 z-10 text-3xl">
+      <div className="absolute bottom-10 right-1/4 z-10 text-3xl">
         🌼
-        </div>
+      </div>
 
-      {/* Ground */}
-      <div className="absolute bottom-0 h-16 w-full bg-green-200" />
+      {/* Bloom */}
+      <img
+        src="/assets/bloom.svg"
+        alt="Bloom"
+        className="absolute bottom-8 left-1/2 z-20 w-28 -translate-x-1/2"
+      />
 
     </div>
   );
