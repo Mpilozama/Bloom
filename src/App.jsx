@@ -1,6 +1,5 @@
-
-import Garden from "./components/garden/Garden";
 import { useState } from "react";
+import Garden from "./components/garden/Garden";
 
 function App() {
   const [capacity, setCapacity] = useState(null);
@@ -12,10 +11,6 @@ function App() {
         <Garden />
 
         <div className="mb-8">
-          <div className="text-7xl mb-4">
-            🐾
-          </div>
-
           <h1 className="text-4xl font-bold text-green-900">
             Bloom
           </h1>
@@ -26,6 +21,7 @@ function App() {
         </div>
 
         <div className="bg-white rounded-3xl shadow-lg p-6">
+
           <h2 className="text-2xl font-semibold text-gray-900">
             How much do you have in you today?
           </h2>
@@ -59,22 +55,56 @@ function App() {
 
           </div>
 
+          {/* LITTLE */}
           {capacity === "little" && (
-            <p className="mt-6 text-green-800">
-              🐾 That's okay. We can keep it tiny today.
-            </p>
+            <div className="mt-6 rounded-2xl bg-green-50 p-5 text-left">
+              <p className="text-lg font-semibold text-green-900">
+                🐾 Let's make this tiny.
+              </p>
+
+              <p className="mt-2 text-green-800">
+                Take one slow breath. You don't have to do anything else.
+              </p>
+
+              <button className="mt-4 rounded-xl bg-green-700 px-4 py-3 text-white">
+                I did it 🌱
+              </button>
+            </div>
           )}
 
+          {/* SOME */}
           {capacity === "some" && (
-            <p className="mt-6 text-green-800">
-              🐾 Okay. Let's find something that feels manageable.
-            </p>
+            <div className="mt-6 rounded-2xl bg-green-50 p-5 text-left">
+              <p className="text-lg font-semibold text-green-900">
+                🐾 Let's do something small together.
+              </p>
+
+              <p className="mt-2 text-green-800">
+                Look around and notice three things you can see.
+              </p>
+
+              <button className="mt-4 rounded-xl bg-green-700 px-4 py-3 text-white">
+                I did it 🌱
+              </button>
+            </div>
           )}
 
+          {/* TIME */}
           {capacity === "time" && (
-            <p className="mt-6 text-green-800">
-              🐾 Lovely. We can explore a little more together.
-            </p>
+            <div className="mt-6 rounded-2xl bg-green-50 p-5 text-left">
+              <p className="text-lg font-semibold text-green-900">
+                🐾 Lovely. Let's take a little more time.
+              </p>
+
+              <p className="mt-2 text-green-800">
+                Think of one thing that made today feel difficult and one
+                thing that helped you get through it.
+              </p>
+
+              <button className="mt-4 rounded-xl bg-green-700 px-4 py-3 text-white">
+                I did it 🌱
+              </button>
+            </div>
           )}
 
         </div>
