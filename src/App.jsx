@@ -3,12 +3,13 @@ import Garden from "./components/garden/Garden";
 
 function App() {
   const [capacity, setCapacity] = useState(null);
+  const [completed, setCompleted] = useState(false);
 
   return (
     <main className="min-h-screen bg-green-50 flex items-center justify-center p-6">
       <section className="w-full max-w-md text-center">
 
-        <Garden />
+        <Garden completed={completed} />
 
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-green-900">
@@ -30,8 +31,8 @@ function App() {
             There is no right answer.
           </p>
 
+          {/* CAPACITY BUTTONS - THESE ARE THE ONES YOU NEED */}
           <div className="space-y-3">
-
             <button
               onClick={() => setCapacity("little")}
               className="w-full rounded-2xl bg-green-100 px-5 py-4 text-green-900 font-medium hover:bg-green-200 transition"
@@ -52,7 +53,6 @@ function App() {
             >
               🌸 I've got time
             </button>
-
           </div>
 
           {/* LITTLE */}
@@ -66,8 +66,11 @@ function App() {
                 Take one slow breath. You don't have to do anything else.
               </p>
 
-              <button className="mt-4 rounded-xl bg-green-700 px-4 py-3 text-white">
-                I did it 🌱
+              <button
+                onClick={() => setCompleted(true)}
+                className="mt-4 rounded-xl bg-green-100 px-4 py-3 text-green-800 border-2 border-green-300 hover:bg-green-200 transition"
+              >
+                🌱 I did it
               </button>
             </div>
           )}
@@ -83,8 +86,11 @@ function App() {
                 Look around and notice three things you can see.
               </p>
 
-              <button className="mt-4 rounded-xl bg-green-700 px-4 py-3 text-white">
-                I did it 🌱
+              <button
+                onClick={() => setCompleted(true)}
+                className="mt-4 rounded-xl bg-green-100 px-4 py-3 text-green-800 border-2 border-green-300 hover:bg-green-200 transition"
+              >
+                🌱 I did it
               </button>
             </div>
           )}
@@ -101,8 +107,11 @@ function App() {
                 thing that helped you get through it.
               </p>
 
-              <button className="mt-4 rounded-xl bg-green-700 px-4 py-3 text-white">
-                I did it 🌱
+              <button
+                onClick={() => setCompleted(true)}
+                className="mt-4 rounded-xl bg-green-100 px-4 py-3 text-green-800 border-2 border-green-300 hover:bg-green-200 transition"
+              >
+                🌱 I did it
               </button>
             </div>
           )}
