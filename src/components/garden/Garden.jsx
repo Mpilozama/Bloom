@@ -30,7 +30,7 @@ function Garden() {
 
       {/* Bloom */}
       <img
-        src="/assets/bloom.svg"
+        src="assets/Bloom.svg"
         alt="Bloom"
         className="absolute bottom-8 left-1/2 z-20 w-28 -translate-x-1/2"
       />
