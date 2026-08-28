@@ -11,6 +11,22 @@ function App() {
 
         <Garden completed={completed} />
 
+        {/* BLOOM'S SPEECH BUBBLE */}
+        <div className="relative mb-2">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-md max-w-xs mx-auto border-2 border-green-200">
+            <p className="text-green-800 text-sm font-medium leading-relaxed">
+              {!capacity && !completed && "🌱 Hey there. What do you have in you today?"}
+              {capacity === "little" && !completed && "🌱 That's okay. Let's go slow together."}
+              {capacity === "some" && !completed && "🌿 Perfect. Let's do something gentle."}
+              {capacity === "time" && !completed && "🌸 Wonderful. Take all the time you need."}
+              {completed && "🌷 You showed up. That's everything. I'm so proud of you."}
+            </p>
+          </div>
+          
+          {/* Small triangle pointing to Bloom */}
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white/90 border-r-2 border-b-2 border-green-200 rotate-45"></div>
+        </div>
+
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-green-900">
             Bloom
@@ -53,6 +69,7 @@ function App() {
             >
               🌸 I've got time
             </button>
+
           </div>
 
           {/* LITTLE */}
@@ -113,6 +130,7 @@ function App() {
               >
                 🌱 I did it
               </button>
+
             </div>
           )}
 
