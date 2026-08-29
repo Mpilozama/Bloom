@@ -47,7 +47,7 @@ function App() {
             There is no right answer.
           </p>
 
-          {/* CAPACITY BUTTONS - THESE ARE THE ONES YOU NEED */}
+          {/* CAPACITY BUTTONS */}
           <div className="space-y-3">
             <button
               onClick={() => setCapacity("little")}
@@ -69,11 +69,10 @@ function App() {
             >
               🌸 I've got time
             </button>
-
           </div>
 
           {/* LITTLE */}
-          {capacity === "little" && (
+          {capacity === "little" && !completed && (
             <div className="mt-6 rounded-2xl bg-green-50 p-5 text-left">
               <p className="text-lg font-semibold text-green-900">
                 🐾 Let's make this tiny.
@@ -93,7 +92,7 @@ function App() {
           )}
 
           {/* SOME */}
-          {capacity === "some" && (
+          {capacity === "some" && !completed && (
             <div className="mt-6 rounded-2xl bg-green-50 p-5 text-left">
               <p className="text-lg font-semibold text-green-900">
                 🐾 Let's do something small together.
@@ -113,7 +112,7 @@ function App() {
           )}
 
           {/* TIME */}
-          {capacity === "time" && (
+          {capacity === "time" && !completed && (
             <div className="mt-6 rounded-2xl bg-green-50 p-5 text-left">
               <p className="text-lg font-semibold text-green-900">
                 🐾 Lovely. Let's take a little more time.
@@ -130,7 +129,28 @@ function App() {
               >
                 🌱 I did it
               </button>
+            </div>
+          )}
 
+          {/* COMPLETION MESSAGE */}
+          {completed && (
+            <div className="mt-6 rounded-2xl bg-green-100 p-5 text-center">
+              <p className="text-2xl">🐾</p>
+              <p className="mt-2 text-lg font-semibold text-green-900">
+                You did enough for today.
+              </p>
+              <p className="mt-1 text-green-800">
+                Your garden grew because you showed up. 🌱
+              </p>
+              <button
+                onClick={() => {
+                  setCompleted(false);
+                  setCapacity(null);
+                }}
+                className="mt-4 text-sm text-green-700 underline hover:text-green-900 transition"
+              >
+                Start again 🌱
+              </button>
             </div>
           )}
 
