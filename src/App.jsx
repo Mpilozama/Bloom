@@ -1,6 +1,43 @@
 import { useState, useEffect } from "react";
 import Garden from "./components/garden/Garden";
 
+// Move this function OUTSIDE the component
+const getBloomMessage = (capacity, completed, completionCount) => {
+  if (completed) {
+    const messages = [
+      "🌷 You did it! I'm so proud of you.",
+      "🌷 Another day, another flower. You're amazing.",
+      "🌷 Your garden is growing because of you.",
+      "🌷 Thank you for showing up today."
+    ];
+    return messages[completionCount % messages.length];
+  }
+
+  if (!capacity) {
+    if (completionCount === 0) {
+      return "🌱 Hey there. Welcome to your new garden. What do you have in you today?";
+    }
+    if (completionCount === 1) {
+      return "🌱 Welcome back! Your first flower is waiting. How are you feeling?";
+    }
+    if (completionCount < 3) {
+      return `🌱 Nice to see you again! Your garden has ${completionCount} flowers now. What do you need today?`;
+    }
+    return "🌱 Look at your beautiful garden! I'm so glad you're here. What do you have in you today?";
+  }
+
+  switch(capacity) {
+    case 'little':
+      return "🌱 That's okay. We don't need to do much. Just be here with me.";
+    case 'some':
+      return "🌿 Perfect. Let's do something gentle together.";
+    case 'time':
+      return "🌸 Wonderful. Take all the time you need. I'm here with you.";
+    default:
+      return "🌱 How are you feeling today?";
+  }
+};
+
 function App() {
   const [capacity, setCapacity] = useState(null);
   const [completed, setCompleted] = useState(false);
@@ -59,16 +96,11 @@ function App() {
           </div>
         )}
 
-        {/* BLOOM'S SPEECH BUBBLE */}
+        {/* BLOOM'S SPEECH BUBBLE  */}
         <div className="relative mb-2">
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-md max-w-xs mx-auto border-2 border-green-200">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-md max-w-xs mx-auto border-2 border-green-200 min-h-[60px] flex items-center justify-center">
             <p className="text-green-800 text-sm font-medium leading-relaxed">
-              {!capacity && !completed && completionCount === 0 && "🌱 Hey there. Welcome to your garden."}
-              {!capacity && !completed && completionCount > 0 && `🌱 Welcome back. You've visited ${completionCount} time${completionCount > 1 ? 's' : ''}.`}
-              {capacity === "little" && !completed && "🌱 That's okay. Let's go slow together."}
-              {capacity === "some" && !completed && "🌿 Perfect. Let's do something gentle."}
-              {capacity === "time" && !completed && "🌸 Wonderful. Take all the time you need."}
-              {completed && "🌷 You showed up. That's everything. I'm so proud of you."}
+              {getBloomMessage(capacity, completed, completionCount)}
             </p>
           </div>
           <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white/90 border-r-2 border-b-2 border-green-200 rotate-45"></div>
@@ -183,7 +215,7 @@ function App() {
 
       </section>
 
-      {/* Add fadeIn animation */}
+      {/* fadeIn animation */}
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
