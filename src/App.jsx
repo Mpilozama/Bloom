@@ -1,40 +1,44 @@
 import { useState, useEffect } from "react";
 import Garden from "./components/garden/Garden";
 
-// Move this function OUTSIDE the component
+//bloom messagw
 const getBloomMessage = (capacity, completed, completionCount) => {
   if (completed) {
     const messages = [
-      "🌷 You did it! I'm so proud of you.",
-      "🌷 Another day, another flower. You're amazing.",
-      "🌷 Your garden is growing because of you.",
-      "🌷 Thank you for showing up today."
+      "🌷 You did it! Look at you, showing up for yourself.",
+      "🌷 Another flower blooms because you showed up. Amazing.",
+      `🌷 That's ${completionCount} times now. You're building something beautiful.`,
+      "🌷 Thank you for trusting me with your garden. It's growing beautifully.",
+      "🌷 Every time you show up, your garden gets a little more magical."
     ];
     return messages[completionCount % messages.length];
   }
 
   if (!capacity) {
     if (completionCount === 0) {
-      return "🌱 Hey there. Welcome to your new garden. What do you have in you today?";
+      return "🌱 Hey you. Welcome. No expectations here. Just a garden and a friend. What do you have in you today?";
     }
     if (completionCount === 1) {
-      return "🌱 Welcome back! Your first flower is waiting. How are you feeling?";
+      return `🌱 Look who's back! That first flower is blooming because of you. How are you feeling today?`;
     }
-    if (completionCount < 3) {
-      return `🌱 Nice to see you again! Your garden has ${completionCount} flowers now. What do you need today?`;
+    if (completionCount === 2) {
+      return `🌱 Two flowers now! Your garden is growing. What kind of day is today?`;
     }
-    return "🌱 Look at your beautiful garden! I'm so glad you're here. What do you have in you today?";
+    if (completionCount < 5) {
+      return `🌱 ${completionCount} flowers and counting. You're building something special here. What do you need today?`;
+    }
+    return `🌱 Look at your beautiful garden! ${completionCount} flowers. They're all here because you showed up. What do you have in you today?`;
   }
 
   switch(capacity) {
     case 'little':
-      return "🌱 That's okay. We don't need to do much. Just be here with me.";
+      return "🌱 A little is perfect. Just sit with me for a moment. That's enough.";
     case 'some':
-      return "🌿 Perfect. Let's do something gentle together.";
+      return "🌿 Some is beautiful. Let's do something gentle together, okay?";
     case 'time':
-      return "🌸 Wonderful. Take all the time you need. I'm here with you.";
+      return "🌸 You have time? That's lovely. Let's slow down together.";
     default:
-      return "🌱 How are you feeling today?";
+      return "🌱 I'm here with you. Whatever you need today.";
   }
 };
 
@@ -115,7 +119,7 @@ function App() {
           </p>
           {completionCount > 0 && (
             <p className="mt-1 text-sm text-green-600">
-              {completionCount} day{completionCount > 1 ? 's' : ''} of showing up
+              {completionCount} moment{completionCount > 1 ? 's' : ''} of showing up
             </p>
           )}
         </div>
