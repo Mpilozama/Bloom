@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import Garden from "./components/garden/Garden";
+import ActivityHistory from './components/ActivityHistory';
 
-//bloom messagw
+// Bloom message function 
 const getBloomMessage = (capacity, completed, completionCount) => {
   if (completed) {
     const messages = [
@@ -43,19 +44,21 @@ const getBloomMessage = (capacity, completed, completionCount) => {
 };
 
 function App() {
+  // ALL state hooks go here at the top
   const [capacity, setCapacity] = useState(null);
   const [completed, setCompleted] = useState(false);
   const [completionCount, setCompletionCount] = useState(0);
+  const [activities, setActivities] = useState([]);
   const [showGardenMessage, setShowGardenMessage] = useState(false);
 
-  // Load saved data on start
+  // ONE useEffect - loads saved data when app starts
   useEffect(() => {
     const saved = localStorage.getItem('bloom_data');
     if (saved) {
       try {
         const data = JSON.parse(saved);
         setCompletionCount(data.count || 0);
-        // If they completed today, show the completed state
+        setActivities(data.activities || []);
         if (data.lastDate === new Date().toDateString()) {
           setCompleted(true);
           setShowGardenMessage(true);
@@ -66,6 +69,7 @@ function App() {
     }
   }, []);
 
+  // ONE handleComplete function
   const handleComplete = () => {
     setCompleted(true);
     setShowGardenMessage(true);
@@ -73,18 +77,35 @@ function App() {
     const newCount = completionCount + 1;
     setCompletionCount(newCount);
     
+    // Get the activity name based on capacity
+    const activityNames = {
+      little: 'Took a slow breath',
+      some: 'Noticed three things around me',
+      time: 'Reflected on my day'
+    };
+    
+    const newActivities = [
+      ...activities,
+      {
+        name: activityNames[capacity] || 'Showed up',
+        date: new Date().toISOString()
+      }
+    ];
+    setActivities(newActivities);
+    
     // Save to localStorage
     localStorage.setItem('bloom_data', JSON.stringify({
       count: newCount,
-      lastDate: new Date().toDateString()
+      lastDate: new Date().toDateString(),
+      activities: newActivities
     }));
   };
 
+  // ONE handleReset function
   const handleReset = () => {
     setCompleted(false);
     setCapacity(null);
     setShowGardenMessage(false);
-    // Don't reset count - that's permanent progress!
   };
 
   return (
@@ -100,7 +121,7 @@ function App() {
           </div>
         )}
 
-        {/* BLOOM'S SPEECH BUBBLE  */}
+        {/* BLOOM'S SPEECH BUBBLE */}
         <div className="relative mb-2">
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-md max-w-xs mx-auto border-2 border-green-200 min-h-[60px] flex items-center justify-center">
             <p className="text-green-800 text-sm font-medium leading-relaxed">
@@ -207,6 +228,10 @@ function App() {
               <p className="mt-1 text-sm text-green-600">
                 You've visited {completionCount} time{completionCount > 1 ? 's' : ''}
               </p>
+              
+              {/* ActivityHistory component - */}
+              <ActivityHistory activities={activities} />
+              
               <button
                 onClick={handleReset}
                 className="mt-4 text-sm text-green-700 underline hover:text-green-900 transition"
@@ -222,8 +247,12 @@ function App() {
       {/* fadeIn animation */}
       <style>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
+          from { opacity: 0; transform: translateY(10px); }y
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateX(-50%) translateY(0); }
+          50% { transform: translateX(-50%) translateY(-8px); }
         }
       `}</style>
     </main>
