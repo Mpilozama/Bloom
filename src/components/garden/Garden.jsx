@@ -12,7 +12,7 @@ function Garden({ completed, completionCount = 0 }) {
   ];
 
   // This determines how many flowers to show
-  const flowersToShow = Math.min(completionCount + 1, flowerPositions.length);
+const flowersToShow = Math.min(completionCount, flowerPositions.length);
 
   const backgrounds = [
     'from-sky-100 to-green-100',
