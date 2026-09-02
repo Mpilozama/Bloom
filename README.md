@@ -1,16 +1,438 @@
-# React + Vite
+# Bloom 🌱
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+### Wellbeing that works for the person — not the streak.
 
-Currently, two official plugins are available:
+Bloom is an adaptive wellbeing companion designed to help people make meaningful improvements to their overall wellbeing without turning self-care into another responsibility.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Most wellness apps depend heavily on users continuously reporting how they feel, what they did, and whether they completed their goals. But self-reported data is not always reliable. People can forget, misjudge themselves, answer differently depending on their mood, or change their answers simply because they want to maintain a streak.
 
-## React Compiler
+Bloom explores a different approach:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+> **Don't treat every piece of user input as absolute truth. Treat it as a signal.**
 
-## Expanding the Oxlint configuration
+The goal is not to keep people inside the app.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+The goal is to help them become healthier, more aware, and more capable of taking care of themselves **outside of the app**.
+
+---
+
+## 🧠 The Problem
+
+Improving wellbeing is not one-dimensional.
+
+A person's overall wellbeing can be influenced by areas such as:
+
+* Mental and emotional health
+* Physical activity
+* Sleep and recovery
+* Social connection
+* Stress
+* Daily routines
+* Environment
+* Sense of purpose and fulfillment
+
+Yet many wellness applications reduce this complexity to simple inputs such as:
+
+> "How are you feeling today?"
+
+or:
+
+> "Did you complete your habit?"
+
+That creates two major problems.
+
+### 1. Self-reported data isn't always reliable
+
+Users may provide inaccurate information because they:
+
+* Forget what actually happened
+* Misinterpret their own state
+* Don't want to acknowledge that they are struggling
+* Give answers they think the application expects
+* Change answers to maintain progress or streaks
+* Simply don't have enough awareness to accurately assess themselves
+
+When an application blindly trusts those inputs, its recommendations can be built on an inaccurate picture of the user.
+
+### 2. Wellness can become another obligation
+
+Streaks and constant check-ins are designed to increase engagement.
+
+But engagement is not the same thing as wellbeing.
+
+A user may eventually interact with an application because they don't want to:
+
+> "Lose their streak."
+
+rather than because the interaction is actually helping them.
+
+Bloom therefore treats **meaningful improvement as the objective — not maximum app usage.**
+
+---
+
+# 💡 The Bloom Approach
+
+Bloom is built around three ideas.
+
+### 01 — Wellbeing is multidimensional
+
+Instead of reducing wellbeing to a single score, Bloom considers different aspects of a person's life and looks for areas that may need attention.
+
+### 02 — User input is a signal, not unquestionable truth
+
+Bloom is designed around uncertainty.
+
+A user's answer is valuable, but it should not automatically be treated as a perfect representation of their wellbeing.
+
+When information conflicts, becomes outdated, or appears unreliable, the system can seek additional context rather than confidently making assumptions.
+
+### 03 — Engagement should serve the user
+
+Bloom does not use streaks as the primary motivation.
+
+The purpose of an interaction is to help the person take a meaningful step toward better wellbeing.
+
+If someone needs the application less over time because they are doing better, **that is a successful outcome.**
+
+---
+
+# 🌱 How It Works
+
+At a high level, Bloom follows an adaptive loop:
+
+```text
+        ┌─────────────────┐
+        │      User       │
+        └────────┬────────┘
+                 │
+                 ▼
+        ┌─────────────────┐
+        │  Low-friction   │
+        │     signals     │
+        └────────┬────────┘
+                 │
+                 ▼
+        ┌─────────────────┐
+        │ Signal analysis │
+        │  + uncertainty  │
+        └────────┬────────┘
+                 │
+                 ▼
+        ┌─────────────────┐
+        │ Identify areas  │
+        │  needing focus  │
+        └────────┬────────┘
+                 │
+                 ▼
+        ┌─────────────────┐
+        │   Personalized  │
+        │   next action   │
+        └────────┬────────┘
+                 │
+                 ▼
+        ┌─────────────────┐
+        │ User experiences│
+        │   the action    │
+        └────────┬────────┘
+                 │
+                 ▼
+        ┌─────────────────┐
+        │ New information │
+        │     / signal    │
+        └────────┬────────┘
+                 │
+                 └──────────────► Adapt
+```
+
+Rather than repeatedly asking the same questions, Bloom aims to learn from the **pattern of signals over time**.
+
+The system can then decide when it has enough confidence to recommend something and when it needs more information.
+
+---
+
+# 🔎 Handling Uncertainty
+
+One of Bloom's core design principles is that the system should be careful about claiming to know something it cannot actually know.
+
+For example:
+
+```text
+User input:
+"I'm feeling fine."
+
+Recent signals:
+- Very low activity
+- Poor sleep
+- Repeatedly abandoned activities
+- Increasingly negative reflections
+
+Instead of:
+
+"You are struggling."
+
+Bloom should recognize:
+
+"The available signals don't fully agree."
+```
+
+This distinction matters.
+
+Bloom is not intended to diagnose a user or determine their mental-health condition.
+
+It is intended to recognize **uncertainty** and respond cautiously.
+
+---
+
+# 🎯 Meaningful Engagement
+
+Bloom intentionally avoids making the user's primary goal:
+
+> "Use Bloom every day."
+
+Instead, the goal is:
+
+> **"Use Bloom when it can help you make a meaningful change."**
+
+That means avoiding mechanics such as:
+
+* ❌ Daily streak pressure
+* ❌ Punishment for missed days
+* ❌ Engagement-based guilt
+* ❌ Artificial productivity scores
+* ❌ Endless check-ins
+* ❌ Rewards that encourage using the app instead of improving yourself
+
+Instead, Bloom focuses on:
+
+* ✅ Small actionable interventions
+* ✅ Personalized recommendations
+* ✅ Reflection and awareness
+* ✅ Multiple dimensions of wellbeing
+* ✅ Confidence-aware interpretation
+* ✅ Progress that belongs to the user
+
+---
+
+# 🛡️ Safety & Responsibility
+
+Bloom is a wellbeing prototype, **not a medical device or replacement for professional healthcare.**
+
+The system should never:
+
+* Diagnose mental-health conditions
+* Present uncertain inferences as facts
+* Claim that an intervention will medically treat a condition
+* Encourage users to replace professional support with the application
+* Use sensitive information unnecessarily
+
+Any future AI functionality should be designed with:
+
+* Explicit uncertainty
+* Conservative recommendations
+* Clear boundaries
+* Privacy by design
+* Human-readable explanations
+* Appropriate escalation guidance for high-risk situations
+
+The application should be especially careful when dealing with potentially sensitive mental-health information.
+
+---
+
+# 🏗️ Architecture
+
+The prototype is built with a lightweight web architecture.
+
+```text
+React Frontend
+      │
+      ├── User Interface
+      ├── Wellbeing Signals
+      ├── Recommendation Logic
+      ├── Bloom Companion
+      └── Progress Visualization
+              │
+              ▼
+       Local / Application Data
+```
+
+### Current technology
+
+* **React** — user interface and application state
+* **Vite** — development and build tooling
+* **JavaScript** — application logic
+* **Tailwind CSS** — interface styling
+* **localStorage** — lightweight client-side persistence
+
+The architecture is intentionally simple for the prototype while leaving room for a future recommendation/AI layer.
+
+---
+
+# 📁 Project Structure
+
+```text
+bloom/
+├── public/
+│   └── assets/
+│       └── Bloom.svg
+│
+├── src/
+│   ├── components/
+│   │   ├── garden/
+│   │   │   ├── Garden.jsx
+│   │   │   └── GardenState.js
+│   │   │
+│   │   └── ActivityHistory.jsx
+│   │
+│   ├── App.jsx
+│   └── ...
+│
+├── package.json
+├── vite.config.js
+└── README.md
+```
+
+---
+
+# 🚀 Getting Started
+
+## Prerequisites
+
+* Node.js
+* npm
+* Git
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/YOUR-USERNAME/bloom.git
+```
+
+Navigate to the project:
+
+```bash
+cd bloom
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open the local URL displayed by Vite.
+
+---
+
+# 🧪 Prototype Scope
+
+This project is currently a **hackathon prototype**.
+
+The prototype focuses on demonstrating the central product direction rather than presenting a clinically validated wellbeing system.
+
+The long-term concept requires considerably more work, including:
+
+* Evidence-informed intervention design
+* Better wellbeing signal collection
+* Confidence and uncertainty modelling
+* Evaluation of conflicting user inputs
+* Personalization
+* Safety testing
+* Accessibility testing
+* User research
+* Outcome evaluation
+* Privacy and data protection work
+
+The most important next step is not simply adding more features.
+
+It is determining whether Bloom's approach **actually helps people improve their wellbeing in real-world use.**
+
+---
+
+# 🔮 Future Vision
+
+Bloom could eventually evolve into a system that builds a cautious, continuously updated understanding of a person's wellbeing without requiring them to complete a daily questionnaire.
+
+Instead of asking:
+
+> "How are you today?"
+
+every day, Bloom could learn from occasional, meaningful interactions and identify when something may deserve attention.
+
+For example:
+
+```text
+        Multiple Signals
+               │
+               ▼
+      ┌─────────────────┐
+      │ Confidence /    │
+      │ consistency     │
+      │ analysis        │
+      └────────┬────────┘
+               │
+       ┌───────┴────────┐
+       │                │
+    Confident       Uncertain
+       │                │
+       ▼                ▼
+ Recommend          Ask for
+ next action        context
+       │                │
+       └───────┬────────┘
+               ▼
+        Meaningful action
+               │
+               ▼
+          User outcome
+```
+
+The long-term vision is not another application that tells people to check in every morning.
+
+It is a **support system that helps people understand themselves better and make better choices for their wellbeing.**
+
+---
+
+# 🏆 Hackathon Context
+
+Bloom was created for **Hack for Humanity | Summer 2026**, focused on technology addressing challenges in mental and physical health.
+
+The project explores the intersection of:
+
+* Mental wellbeing
+* Human-centered design
+* Responsible AI
+* Adaptive personalization
+* Data uncertainty
+* Privacy
+* Sustainable engagement
+
+The central question behind Bloom is:
+
+> **Can technology help people improve their wellbeing without making wellbeing itself another task they have to maintain?**
+
+---
+
+# 📌 Project Status
+
+**Status:** Hackathon prototype 🚧
+
+Bloom is an ongoing experiment in building technology that prioritizes the user's wellbeing over the application's engagement metrics.
+
+The prototype demonstrates the direction.
+
+The larger vision requires further research, testing, and iteration.
+
+---
+
+## 🌱 Philosophy
+
+> **The app should work for you.
+> You shouldn't have to work for the app.**
