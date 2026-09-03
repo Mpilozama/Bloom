@@ -145,55 +145,84 @@ function App() {
         )}
 
         {/* INTRODUCTION SCREEN */}
-        {screen === "introduction" && (
-          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+   {screen === "introduction" && (
+  <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+    <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+      
+      {/* Speech bubble style - feels like Bloom is speaking */}
+      <div className="relative rounded-[2rem] bg-white/90 p-7 shadow-xl backdrop-blur-md border border-white/60">
+        
+        {/* Bloom's face with expression */}
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-3xl animate-[bloomIdle_3s_ease-in-out_infinite]">🌱</span>
+          <span className="text-sm font-medium text-[#78ad70] tracking-wide">Bloom says...</span>
+        </div>
 
-            <div className="w-full max-w-lg text-center">
+        <p className="text-2xl font-semibold text-[#234b36]">
+          "I'm so glad you're here."
+        </p>
 
-              <div className="mb-8 animate-[fadeIn_0.8s_ease-out]">
-                <p className="text-3xl font-semibold text-[#234b36]">
-                  I'm Bloom. 🌱
-                </p>
+        <div className="my-4 h-px w-full bg-gradient-to-r from-transparent via-[#78ad70]/30 to-transparent" />
 
-                <p className="mx-auto mt-4 max-w-md text-lg leading-relaxed text-[#527060]">
-                  I'm here to help you take care of yourself —
-                  without turning taking care of yourself
-                  into another job.
-                </p>
-              </div>
+        <p className="text-base leading-relaxed text-[#527060]">
+          I made this place for people who are tired of wellness apps 
+          that feel like work.
+        </p>
 
-              <div className="rounded-[2rem] border border-white/60 bg-white/80 p-7 shadow-xl backdrop-blur-md animate-[fadeIn_1.2s_ease-out]">
+        <p className="mt-3 text-base leading-relaxed text-[#527060]">
+          <span className="font-medium text-[#234b36]">Here's the deal:</span>
+          <br />
+          You show up when you can. I'll be here when you do.
+          No guilt. No pressure. Just us and this garden.
+        </p>
 
-                <p className="text-base leading-relaxed text-[#527060]">
-                  You don't have to check in every day.
-                  <br />
-                  You don't have to get everything right.
-                  <br />
-                  And you don't have to pretend you're doing okay.
-                </p>
+        {/* Visual separator with icons */}
+        <div className="my-5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-[#78ad70]/20" />
+          <span className="text-xs text-[#78ad70] tracking-widest">✦ ✦ ✦</span>
+          <div className="h-px flex-1 bg-[#78ad70]/20" />
+        </div>
 
-                <p className="mt-5 font-medium text-[#315f42]">
-                  We'll figure things out together.
-                </p>
+        {/* Values tags */}
+        <div className="flex flex-wrap justify-center gap-2 text-sm text-[#527060]">
+          <span className="rounded-full bg-[#dff0e6] px-4 py-1.5 shadow-sm">🌱 No streaks</span>
+          <span className="rounded-full bg-[#dff0e6] px-4 py-1.5 shadow-sm">🌸 No guilt</span>
+          <span className="rounded-full bg-[#dff0e6] px-4 py-1.5 shadow-sm">🌿 Just presence</span>
+        </div>
 
-                <button
-                  onClick={() => setScreen("understanding")}
-                  className="
-                    mt-7 rounded-full bg-[#315f42] px-8 py-3
-                    font-medium text-white shadow-md
-                    transition-all duration-200
-                    hover:-translate-y-0.5 hover:bg-[#264d35]
-                  "
-                >
-                  Tell me more →
-                </button>
+        <button
+          onClick={() => setScreen("understanding")}
+          className="
+            mt-6 w-full rounded-full bg-[#315f42] px-8 py-3.5
+            font-medium text-white shadow-md
+            transition-all duration-200
+            hover:-translate-y-0.5 hover:bg-[#264d35]
+            active:scale-95
+          "
+        >
+          ✦ Show me how this works
+        </button>
 
-              </div>
+        {/* Small hint of Bloom's personality */}
+        <p className="mt-3 text-xs text-[#78ad70]/60 italic">
+          (I promise I don't bite. I'm just a friendly sprout.)
+        </p>
 
-            </div>
+      </div>
 
-          </div>
-        )}
+      {/* Speech bubble tail pointing toward Bloom in garden */}
+      <div className="mx-auto -mt-2 h-5 w-5 rotate-45 bg-white/90 border-l border-t border-white/60" />
+      
+      {/* Floating atmosphere elements */}
+      <div className="absolute -left-8 top-1/4 text-3xl opacity-30 animate-[float_7s_ease-in-out_infinite]">
+        ✦
+      </div>
+      <div className="absolute -right-4 bottom-1/3 text-2xl opacity-20 animate-[float_5s_ease-in-out_infinite_reverse]">
+        ✦
+      </div>
+    </div>
+  </div>
+)}
 
         {/* FUTURE SCREEN PLACEHOLDER */}
         {screen === "understanding" && (
