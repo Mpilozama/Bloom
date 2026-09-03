@@ -758,6 +758,107 @@ function App() {
         )}
 
 
+
+        {/* ==================================================
+            SCREEN: RECOMMENDATION EXPERIENCE
+            Bloom suggests something helpful
+        ================================================== */}
+
+        {screen === "recommendation" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+              <div className="rounded-[2rem] border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur-md">
+                
+                <div className="mb-5 flex items-center gap-3">
+                  <span className="text-3xl animate-[bloomIdle_3s_ease-in-out_infinite]">🌱</span>
+                  <span className="text-sm font-medium tracking-wide text-[#78ad70]">Bloom suggests</span>
+                </div>
+
+                <div className="text-center">
+                  <div className="mb-4 text-5xl">💭</div>
+                  
+                  <h2 className="text-xl font-semibold text-[#234b36]">
+                    {customFeeling === "Pretty okay" && "Let's make this moment last."}
+                    {customFeeling === "A bit off" && "A little pause could help."}
+                    {customFeeling === "Running low" && "Let's be gentle with you."}
+                    {customFeeling === "Honestly... rough" && "You don't have to do much."}
+                    {!["Pretty okay", "A bit off", "Running low", "Honestly... rough"].includes(customFeeling) && "Let's find what fits."}
+                  </h2>
+                </div>
+
+                {/* Recommendation cards */}
+                <div className="mt-5 space-y-3">
+                  <button
+                    onClick={() => setScreen("activity-breath")}
+                    className="
+                      w-full rounded-2xl border border-[#dff0e6]
+                      bg-[#f5fbf6] p-4 text-left
+                      transition-all hover:-translate-y-0.5
+                      hover:border-[#78ad70] hover:bg-[#edf7ef]
+                    "
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">🌬️</span>
+                      <div>
+                        <p className="font-medium text-[#234b36]">A slow breath</p>
+                        <p className="text-sm text-[#527060]">Just one. No pressure.</p>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setScreen("activity-notice")}
+                    className="
+                      w-full rounded-2xl border border-[#dff0e6]
+                      bg-[#f5fbf6] p-4 text-left
+                      transition-all hover:-translate-y-0.5
+                      hover:border-[#78ad70] hover:bg-[#edf7ef]
+                    "
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">👀</span>
+                      <div>
+                        <p className="font-medium text-[#234b36]">Look around</p>
+                        <p className="text-sm text-[#527060]">Notice three things you can see</p>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setScreen("activity-write")}
+                    className="
+                      w-full rounded-2xl border border-[#dff0e6]
+                      bg-[#f5fbf6] p-4 text-left
+                      transition-all hover:-translate-y-0.5
+                      hover:border-[#78ad70] hover:bg-[#edf7ef]
+                    "
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">✍️</span>
+                      <div>
+                        <p className="font-medium text-[#234b36]">A few words</p>
+                        <p className="text-sm text-[#527060]">Write what's on your mind</p>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => setScreen("welcome")}
+                  className="
+                    mt-5 w-full rounded-full border-2 border-[#dff0e6]
+                    px-6 py-3 font-medium text-[#527060]
+                    transition-all hover:bg-[#f5fbf6]
+                  "
+                >
+                  Just sit with me instead
+                </button>
+
+              </div>
+            </div>
+          </div>
+        )}
+
       {/* =========================
           ANIMATIONS
       ========================== */}
