@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 function App() {
+  const [screen, setScreen] = useState("welcome");
   const [noticed, setNoticed] = useState(false);
 
   useEffect(() => {
@@ -15,7 +16,7 @@ function App() {
     <main className="min-h-screen overflow-hidden bg-[#dff1e7]">
       <section className="relative mx-auto min-h-screen max-w-6xl overflow-hidden bg-gradient-to-b from-[#bfe3ee] via-[#dff0e6] to-[#a8d49d]">
 
-        {/* Sky */}
+        {/* SKY */}
         <div className="absolute inset-0">
           <div className="absolute left-[8%] top-[12%] text-5xl opacity-70 animate-[drift_10s_ease-in-out_infinite]">
             ☁️
@@ -30,21 +31,20 @@ function App() {
           </div>
         </div>
 
-        {/* Distant hills */}
+        {/* DISTANT HILLS */}
         <div className="absolute bottom-[25%] left-[-10%] h-40 w-[120%] rounded-[50%] bg-[#9dcc9a]" />
-
         <div className="absolute bottom-[20%] left-[-15%] h-32 w-[130%] rounded-[50%] bg-[#8fbe86]" />
 
-        {/* Trees / environment */}
-        <div className="absolute bottom-[20%] left-[5%] text-7xl opacity-90">
+        {/* TREES */}
+        <div className="absolute bottom-[20%] left-[5%] text-7xl">
           🌳
         </div>
 
-        <div className="absolute bottom-[22%] right-[7%] text-8xl opacity-90">
+        <div className="absolute bottom-[22%] right-[7%] text-8xl">
           🌳
         </div>
 
-        {/* Little environmental details */}
+        {/* GRASS */}
         <div className="absolute bottom-[25%] left-[25%] text-3xl animate-[sway_4s_ease-in-out_infinite]">
           🌾
         </div>
@@ -61,22 +61,22 @@ function App() {
           🌷
         </div>
 
-        {/* Ground */}
+        {/* GROUND */}
         <div className="absolute bottom-0 h-[27%] w-full bg-[#78ad70]" />
 
-        <div className="absolute bottom-[21%] left-[20%] text-xl opacity-70">
+        <div className="absolute bottom-[21%] left-[20%] text-xl">
           🌱
         </div>
 
-        <div className="absolute bottom-[18%] left-[38%] text-xl opacity-70">
+        <div className="absolute bottom-[18%] left-[38%] text-xl">
           🌱
         </div>
 
-        <div className="absolute bottom-[20%] right-[38%] text-xl opacity-70">
+        <div className="absolute bottom-[20%] right-[38%] text-xl">
           🌱
         </div>
 
-        {/* Bloom */}
+        {/* BLOOM */}
         <div
           className={`
             absolute bottom-[20%] left-1/2 z-20
@@ -92,56 +92,137 @@ function App() {
           />
         </div>
 
-        {/* Bloom's initial activity hint */}
-        {!noticed && (
-          <div className="absolute bottom-[39%] left-1/2 -translate-x-1/2 text-sm text-green-900/60">
-            Bloom is enjoying a quiet moment...
+        {/* WELCOME SCREEN */}
+        {screen === "welcome" && (
+          <>
+            {!noticed && (
+              <div className="absolute bottom-[39%] left-1/2 -translate-x-1/2 text-sm text-green-900/60">
+                Bloom is enjoying a quiet moment...
+              </div>
+            )}
+
+            <div
+              className={`
+                absolute left-1/2 top-[11%] z-30 w-[min(90%,420px)]
+                -translate-x-1/2
+                transition-all duration-1000
+                ${
+                  noticed
+                    ? "translate-y-0 opacity-100"
+                    : "pointer-events-none translate-y-4 opacity-0"
+                }
+              `}
+            >
+              <div className="rounded-[2rem] bg-white/90 px-7 py-6 text-center shadow-xl backdrop-blur-md">
+
+                <p className="text-2xl font-semibold text-[#234b36]">
+                  Oh, you're here.
+                </p>
+
+                <p className="mt-2 text-base leading-relaxed text-[#527060]">
+                  I was just enjoying the garden.
+                  <br />
+                  Come sit with me for a while.
+                </p>
+
+                <button
+                  onClick={() => setScreen("introduction")}
+                  className="
+                    mt-5 rounded-full bg-[#315f42] px-7 py-3
+                    font-medium text-white shadow-md
+                    transition-all duration-200
+                    hover:-translate-y-0.5 hover:bg-[#264d35]
+                  "
+                >
+                  Come sit with me →
+                </button>
+
+              </div>
+
+              <div className="mx-auto -mt-2 h-5 w-5 rotate-45 bg-white/90" />
+            </div>
+          </>
+        )}
+
+        {/* INTRODUCTION SCREEN */}
+        {screen === "introduction" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+
+            <div className="w-full max-w-lg text-center">
+
+              <div className="mb-8 animate-[fadeIn_0.8s_ease-out]">
+                <p className="text-3xl font-semibold text-[#234b36]">
+                  I'm Bloom. 🌱
+                </p>
+
+                <p className="mx-auto mt-4 max-w-md text-lg leading-relaxed text-[#527060]">
+                  I'm here to help you take care of yourself —
+                  without turning taking care of yourself
+                  into another job.
+                </p>
+              </div>
+
+              <div className="rounded-[2rem] border border-white/60 bg-white/80 p-7 shadow-xl backdrop-blur-md animate-[fadeIn_1.2s_ease-out]">
+
+                <p className="text-base leading-relaxed text-[#527060]">
+                  You don't have to check in every day.
+                  <br />
+                  You don't have to get everything right.
+                  <br />
+                  And you don't have to pretend you're doing okay.
+                </p>
+
+                <p className="mt-5 font-medium text-[#315f42]">
+                  We'll figure things out together.
+                </p>
+
+                <button
+                  onClick={() => setScreen("understanding")}
+                  className="
+                    mt-7 rounded-full bg-[#315f42] px-8 py-3
+                    font-medium text-white shadow-md
+                    transition-all duration-200
+                    hover:-translate-y-0.5 hover:bg-[#264d35]
+                  "
+                >
+                  Tell me more →
+                </button>
+
+              </div>
+
+            </div>
+
           </div>
         )}
 
-        {/* Welcome dialogue */}
-        <div
-          className={`
-            absolute left-1/2 top-[11%] z-30 w-[min(90%,420px)]
-            -translate-x-1/2
-            transition-all duration-1000
-            ${
-              noticed
-                ? "translate-y-0 opacity-100"
-                : "pointer-events-none translate-y-4 opacity-0"
-            }
-          `}
-        >
-          <div className="rounded-[2rem] bg-white/90 px-7 py-6 text-center shadow-xl backdrop-blur-md">
-            <p className="text-2xl font-semibold tracking-tight text-[#234b36]">
-              Oh, you're here.
-            </p>
+        {/* FUTURE SCREEN PLACEHOLDER */}
+        {screen === "understanding" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
 
-            <p className="mt-2 text-base leading-relaxed text-[#527060]">
-              I was just enjoying the garden.
-              <br />
-              Come sit with me for a while.
-            </p>
+            <div className="w-full max-w-lg rounded-[2rem] bg-white/85 p-8 text-center shadow-xl backdrop-blur-md">
 
-            <button
-              onClick={() => alert("Screen 2 coming next")}
-              className="
-                mt-5 rounded-full bg-[#315f42] px-7 py-3
-                font-medium text-white shadow-md
-                transition-all duration-200
-                hover:-translate-y-0.5 hover:bg-[#264d35]
-                focus:outline-none focus:ring-4 focus:ring-[#315f42]/20
-              "
-            >
-              Come sit with me →
-            </button>
+              <p className="text-2xl font-semibold text-[#234b36]">
+                Let's get to know you.
+              </p>
+
+              <p className="mt-3 text-[#527060]">
+                This is where we'll begin understanding
+                what actually matters to you.
+              </p>
+
+              <button
+                onClick={() => setScreen("welcome")}
+                className="mt-6 text-sm text-[#315f42] underline"
+              >
+                Back
+              </button>
+
+            </div>
+
           </div>
+        )}
 
-          {/* Speech bubble tail */}
-          <div className="mx-auto -mt-2 h-5 w-5 rotate-45 bg-white/90" />
-        </div>
-
-        {/* Tiny atmosphere */}
+        {/* ATMOSPHERE */}
         <div className="absolute bottom-[30%] left-[12%] text-lg animate-[float_5s_ease-in-out_infinite]">
           🦋
         </div>
@@ -157,6 +238,7 @@ function App() {
           0%, 100% {
             transform: translateX(-50%) translateY(0);
           }
+
           50% {
             transform: translateX(-50%) translateY(-7px);
           }
@@ -166,6 +248,7 @@ function App() {
           0%, 100% {
             transform: translateX(0);
           }
+
           50% {
             transform: translateX(25px);
           }
@@ -175,6 +258,7 @@ function App() {
           0%, 100% {
             transform: rotate(-2deg);
           }
+
           50% {
             transform: rotate(3deg);
           }
@@ -184,8 +268,21 @@ function App() {
           0%, 100% {
             transform: translateY(0);
           }
+
           50% {
             transform: translateY(-10px);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
       `}</style>
