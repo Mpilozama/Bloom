@@ -457,7 +457,7 @@ function App() {
                 </h1>
 
                 <p className="mt-3 text-sm text-[#527060]">
-                  Whatever you share stays between us.
+                  Say it however it comes. You don't need to make it sound a certain way.
                   No judgment. No pressure.
                 </p>
 
@@ -651,7 +651,11 @@ function App() {
           </div>
         )}
 
-      </section>
+       </section>
+
+
+
+
 
       {/* =========================
           ANIMATIONS
