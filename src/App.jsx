@@ -657,6 +657,107 @@ function App() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+       {/* ==================================================
+            SCREEN: WELLBEING OVERVIEW
+            Shows user's current state at a glance
+        ================================================== */}
+
+        {screen === "wellbeing-overview" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+              <div className="rounded-[2rem] border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur-md">
+                
+                <div className="mb-5 flex items-center gap-3">
+                  <span className="text-3xl">🌱</span>
+                  <span className="text-sm font-medium tracking-wide text-[#78ad70]">Bloom</span>
+                </div>
+
+                <h1 className="text-2xl font-semibold text-[#234b36]">
+                  How are things?
+                </h1>
+
+                <p className="mt-2 text-sm text-[#527060]">
+                  Just a gentle look at where you are right now.
+                </p>
+
+                {/* Current state card */}
+                <div className="mt-5 rounded-2xl bg-[#f5fbf6] p-5 border border-[#dff0e6]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-[#78ad70]">Last check-in</span>
+                    <span className="text-sm text-[#527060]">
+                      {new Date().toLocaleDateString()}
+                    </span>
+                  </div>
+                  
+                  <div className="mt-3 flex items-center gap-3">
+                    <span className="text-3xl">
+                      {customFeeling === "Pretty okay" && "😌"}
+                      {customFeeling === "A bit off" && "😐"}
+                      {customFeeling === "Running low" && "😮‍💨"}
+                      {customFeeling === "Honestly... rough" && "🫠"}
+                      {!["Pretty okay", "A bit off", "Running low", "Honestly... rough"].includes(customFeeling) && "🌱"}
+                    </span>
+                    <div>
+                      <p className="font-medium text-[#234b36]">
+                        {customFeeling || "Getting to know you"}
+                      </p>
+                      <p className="text-xs text-[#78ad70]">
+                        {customFeeling ? "That's what you shared" : "No data yet"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick actions */}
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <button
+                    onClick={() => setScreen("checkin")}
+                    className="
+                      flex-1 rounded-full bg-[#315f42] px-6 py-3
+                      font-medium text-white shadow-md
+                      transition-all hover:-translate-y-0.5
+                      hover:bg-[#264d35] active:scale-95
+                    "
+                  >
+                    Check in now
+                  </button>
+                  
+                  <button
+                    onClick={() => setScreen("welcome")}
+                    className="
+                      flex-1 rounded-full border-2 border-[#dff0e6]
+                      px-6 py-3 font-medium text-[#527060]
+                      transition-all hover:bg-[#f5fbf6]
+                    "
+                  >
+                    Stay in garden
+                  </button>
+                </div>
+
+                {/* View history link */}
+                <button
+                  onClick={() => setScreen("history")}
+                  className="mt-4 text-xs text-[#78ad70] underline-offset-2 hover:underline"
+                >
+                  View past moments →
+                </button>
+
+              </div>
+            </div>
+          </div>
+        )}
+
+
       {/* =========================
           ANIMATIONS
       ========================== */}
