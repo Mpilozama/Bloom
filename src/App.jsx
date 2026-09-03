@@ -1227,6 +1227,234 @@ function App() {
   </div>
 )}
 
+{/* ==================================================
+    SCREEN: SETTINGS / PRIVACY
+================================================== */}
+
+{screen === "settings" && (
+  <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+    <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+      <div className="rounded-[2rem] border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur-md">
+        
+        <div className="mb-5 flex items-center gap-3">
+          <span className="text-3xl">⚙️</span>
+          <span className="text-sm font-medium tracking-wide text-[#78ad70]">Bloom</span>
+        </div>
+
+        <h1 className="text-2xl font-semibold text-[#234b36]">
+          Settings
+        </h1>
+
+        <div className="mt-5 space-y-4">
+          {/* Privacy card */}
+          <div className="rounded-2xl bg-[#f5fbf6] p-4 border border-[#dff0e6]">
+            <p className="font-medium text-[#234b36]">🔒 Privacy</p>
+            <p className="mt-1 text-sm text-[#527060]">
+              Your data stays on your device. Nothing is sent anywhere.
+            </p>
+          </div>
+
+          {/* Data control */}
+          <button
+            onClick={() => {
+              if (confirm("Delete all your history? This can't be undone.")) {
+                localStorage.removeItem('bloom_history');
+                localStorage.removeItem('bloom_custom_feeling');
+                // Keep visit status so we don't force onboarding again
+                alert("Your history has been cleared.");
+                setScreen("welcome");
+              }
+            }}
+            className="
+              w-full rounded-2xl bg-red-50/80 p-4 text-left border border-red-200
+              transition-all hover:bg-red-50
+            "
+          >
+            <p className="font-medium text-red-700">🗑️ Clear history</p>
+            <p className="text-sm text-red-600/70">Delete all your moments</p>
+          </button>
+
+          {/* About */}
+          <div className="rounded-2xl bg-[#f5fbf6] p-4 border border-[#dff0e6]">
+            <p className="font-medium text-[#234b36]">🌱 About Bloom</p>
+            <p className="mt-1 text-sm text-[#527060]">
+              Bloom is a gentle companion. No streaks. No guilt. Just presence.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setScreen("welcome")}
+          className="
+            mt-5 w-full rounded-full bg-[#315f42] px-8 py-4
+            font-medium text-white shadow-md
+            transition-all hover:-translate-y-0.5
+            hover:bg-[#264d35] active:scale-95
+          "
+        >
+          Back to garden
+        </button>
+
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
+{/* ==================================================
+    SCREEN: UNCERTAINTY STATE
+    When Bloom isn't sure how to respond
+================================================== */}
+
+{screen === "uncertainty" && (
+  <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+    <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+      <div className="rounded-[2rem] border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur-md text-center">
+        
+        <div className="mb-4 text-5xl animate-[bloomIdle_3s_ease-in-out_infinite]">🤔</div>
+        
+        <h1 className="text-2xl font-semibold text-[#234b36]">
+          I'm not sure...
+        </h1>
+        
+        <p className="mt-3 text-base leading-relaxed text-[#527060]">
+          Sometimes I don't have the right words.
+          <br />
+          But I'm here with you anyway.
+        </p>
+
+        <div className="mt-5 rounded-2xl bg-[#edf7ef] p-5">
+          <p className="text-sm italic text-[#315f42]">
+            "You don't always need to understand everything. 
+            Just being present is enough."
+          </p>
+        </div>
+
+        <button
+          onClick={() => setScreen("welcome")}
+          className="
+            mt-5 w-full rounded-full bg-[#315f42] px-8 py-4
+            font-medium text-white shadow-md
+            transition-all hover:-translate-y-0.5
+            hover:bg-[#264d35] active:scale-95
+          "
+        >
+          Stay with me 🌿
+        </button>
+
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
+{/* ==================================================
+    SCREEN: EMPTY STATE (First visit, no data)
+    This shows when user has no history yet
+================================================== */}
+
+{screen === "empty-state" && (
+  <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+    <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+      <div className="rounded-[2rem] border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur-md text-center">
+        
+        <div className="mb-4 text-6xl">🌱</div>
+        
+        <h1 className="text-2xl font-semibold text-[#234b36]">
+          Your garden is new
+        </h1>
+        
+        <p className="mt-3 text-base text-[#527060]">
+          Every garden starts as a seed.
+          <br />
+          Take your time. There's no rush.
+        </p>
+
+        <button
+          onClick={() => setScreen("checkin")}
+          className="
+            mt-5 w-full rounded-full bg-[#315f42] px-8 py-4
+            font-medium text-white shadow-md
+            transition-all hover:-translate-y-0.5
+            hover:bg-[#264d35] active:scale-95
+          "
+        >
+          Plant something 🌱
+        </button>
+
+        <button
+          onClick={() => setScreen("welcome")}
+          className="mt-3 text-sm text-[#78ad70] underline-offset-2 hover:underline"
+        >
+          Just sit with me instead
+        </button>
+
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
+{/* ==================================================
+    SCREEN: ERROR STATE
+================================================== */}
+
+{screen === "error" && (
+  <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+    <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+      <div className="rounded-[2rem] border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur-md text-center">
+        
+        <div className="mb-4 text-5xl">🌿</div>
+        
+        <h1 className="text-2xl font-semibold text-[#234b36]">
+          Something went wrong
+        </h1>
+        
+        <p className="mt-3 text-base text-[#527060]">
+          But that's okay. Let's try again.
+        </p>
+
+        <button
+          onClick={() => {
+            setScreen("welcome");
+            // Reset any error state
+          }}
+          className="
+            mt-5 w-full rounded-full bg-[#315f42] px-8 py-4
+            font-medium text-white shadow-md
+            transition-all hover:-translate-y-0.5
+            hover:bg-[#264d35] active:scale-95
+          "
+        >
+          Try again 🌱
+        </button>
+
+      </div>
+    </div>
+  </div>
+)}
+
+
+// Add this as a helper function inside App component
+const navigateTo = (screenName) => {
+  setScreen(screenName);
+};
+
+// Add a floating nav button (optional)
+{/* Quick nav - hidden on production maybe */}
+<div className="absolute top-4 left-4 z-50 flex gap-2 text-xs">
+  <button onClick={() => setScreen("welcome")} className="bg-white/50 px-2 py-1 rounded">🏠</button>
+  <button onClick={() => setScreen("checkin")} className="bg-white/50 px-2 py-1 rounded">💬</button>
+  <button onClick={() => setScreen("wellbeing-overview")} className="bg-white/50 px-2 py-1 rounded">📊</button>
+  <button onClick={() => setScreen("history")} className="bg-white/50 px-2 py-1 rounded">📖</button>
+  <button onClick={() => setScreen("settings")} className="bg-white/50 px-2 py-1 rounded">⚙️</button>
+</div>
 
 
 
