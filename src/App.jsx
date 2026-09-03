@@ -859,6 +859,226 @@ function App() {
           </div>
         )}
 
+
+      {/* ==================================================
+          SCREEN: ACTIVITY - Slow Breath
+      ================================================== */}
+
+      {screen === "activity-breath" && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+          <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+            <div className="rounded-[2rem] border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur-md text-center">
+              
+              <div className="mb-4 text-6xl animate-[bloomIdle_3s_ease-in-out_infinite]">🌬️</div>
+              
+              <h1 className="text-2xl font-semibold text-[#234b36]">
+                One slow breath
+              </h1>
+              
+              <p className="mt-3 text-base text-[#527060]">
+                That's all. Just one.
+                <br />
+                Breathe in slowly...
+              </p>
+
+              {/* Breathing animation circle */}
+              <div className="mx-auto mt-6 h-32 w-32 rounded-full border-4 border-[#78ad70]/30 flex items-center justify-center">
+                <div className="h-20 w-20 rounded-full bg-[#78ad70]/20 animate-ping" />
+              </div>
+
+              <p className="mt-6 text-sm text-[#78ad70]">
+                Inhale... exhale...
+              </p>
+
+              <button
+                onClick={() => {
+                  // Save activity to history
+                  const history = JSON.parse(localStorage.getItem('bloom_history') || '[]');
+                  history.push({
+                    type: 'breath',
+                    date: new Date().toISOString(),
+                    feeling: customFeeling
+                  });
+                  localStorage.setItem('bloom_history', JSON.stringify(history));
+                  setScreen("reflection");
+                }}
+                className="
+                  mt-6 w-full rounded-full bg-[#315f42] px-8 py-4
+                  font-medium text-white shadow-md
+                  transition-all hover:-translate-y-0.5
+                  hover:bg-[#264d35] active:scale-95
+                "
+              >
+                I took a breath ✦
+              </button>
+
+              <button
+                onClick={() => setScreen("recommendation")}
+                className="mt-3 text-sm text-[#78ad70] underline-offset-2 hover:underline"
+              >
+                Not right now
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==================================================
+          SCREEN: ACTIVITY - Notice Things
+      ================================================== */}
+
+      {screen === "activity-notice" && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+          <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+            <div className="rounded-[2rem] border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur-md">
+              
+              <div className="text-center">
+                <div className="mb-4 text-5xl">👀</div>
+                
+                <h1 className="text-2xl font-semibold text-[#234b36]">
+                  Look around
+                </h1>
+                
+                <p className="mt-3 text-base text-[#527060]">
+                  Notice three things you can see right now.
+                  <br />
+                  They don't have to be special.
+                </p>
+              </div>
+
+              {/* Input for noticing */}
+              <div className="mt-5 space-y-3">
+                <input
+                  type="text"
+                  placeholder="1. I see..."
+                  className="
+                    w-full rounded-xl border-2 border-[#dff0e6]
+                    bg-[#f5fbf6] px-4 py-3 text-[#234b36]
+                    placeholder:text-[#b8d4ae]
+                    focus:border-[#78ad70] focus:outline-none
+                    focus:ring-2 focus:ring-[#78ad70]/20
+                  "
+                />
+                <input
+                  type="text"
+                  placeholder="2. I see..."
+                  className="
+                    w-full rounded-xl border-2 border-[#dff0e6]
+                    bg-[#f5fbf6] px-4 py-3 text-[#234b36]
+                    placeholder:text-[#b8d4ae]
+                    focus:border-[#78ad70] focus:outline-none
+                    focus:ring-2 focus:ring-[#78ad70]/20
+                  "
+                />
+                <input
+                  type="text"
+                  placeholder="3. I see..."
+                  className="
+                    w-full rounded-xl border-2 border-[#dff0e6]
+                    bg-[#f5fbf6] px-4 py-3 text-[#234b36]
+                    placeholder:text-[#b8d4ae]
+                    focus:border-[#78ad70] focus:outline-none
+                    focus:ring-2 focus:ring-[#78ad70]/20
+                  "
+                />
+              </div>
+
+              <button
+                onClick={() => {
+                  const history = JSON.parse(localStorage.getItem('bloom_history') || '[]');
+                  history.push({
+                    type: 'notice',
+                    date: new Date().toISOString(),
+                    feeling: customFeeling
+                  });
+                  localStorage.setItem('bloom_history', JSON.stringify(history));
+                  setScreen("reflection");
+                }}
+                className="
+                  mt-6 w-full rounded-full bg-[#315f42] px-8 py-4
+                  font-medium text-white shadow-md
+                  transition-all hover:-translate-y-0.5
+                  hover:bg-[#264d35] active:scale-95
+                "
+              >
+                I noticed ✦
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==================================================
+          SCREEN: ACTIVITY - Write
+      ================================================== */}
+
+      {screen === "activity-write" && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+          <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+            <div className="rounded-[2rem] border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur-md">
+              
+              <div className="text-center">
+                <div className="mb-4 text-5xl">✍️</div>
+                
+                <h1 className="text-2xl font-semibold text-[#234b36]">
+                  A few words
+                </h1>
+                
+                <p className="mt-3 text-sm text-[#527060]">
+                  Write whatever comes to mind.
+                  <br />
+                  It doesn't have to be perfect.
+                </p>
+              </div>
+
+              <textarea
+                placeholder="I'm thinking about..."
+                className="
+                  mt-5 w-full rounded-2xl border-2 border-[#dff0e6]
+                  bg-[#f5fbf6] px-5 py-4 text-[#234b36]
+                  placeholder:text-[#b8d4ae]
+                  focus:border-[#78ad70] focus:outline-none
+                  focus:ring-2 focus:ring-[#78ad70]/20
+                  min-h-[120px] resize-none
+                "
+                rows="4"
+                id="write-input"
+              />
+
+              <button
+                onClick={() => {
+                  const input = document.getElementById('write-input');
+                  const text = input?.value?.trim() || "I wrote something";
+                  
+                  const history = JSON.parse(localStorage.getItem('bloom_history') || '[]');
+                  history.push({
+                    type: 'write',
+                    content: text,
+                    date: new Date().toISOString(),
+                    feeling: customFeeling
+                  });
+                  localStorage.setItem('bloom_history', JSON.stringify(history));
+                  setScreen("reflection");
+                }}
+                className="
+                  mt-5 w-full rounded-full bg-[#315f42] px-8 py-4
+                  font-medium text-white shadow-md
+                  transition-all hover:-translate-y-0.5
+                  hover:bg-[#264d35] active:scale-95
+                "
+              >
+                I wrote something ✦
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
+            
+
+
       {/* =========================
           ANIMATIONS
       ========================== */}
