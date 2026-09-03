@@ -1076,7 +1076,88 @@ function App() {
           </div>
         </div>
       )}
-            
+
+
+
+
+
+{/* ==================================================
+    SCREEN: PROGRESS (Gentle, no streaks)
+================================================== */}
+
+{screen === "progress" && (
+  <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+    <div className="w-full max-w-lg animate-[fadeIn_0.8s_ease-out]">
+      <div className="rounded-[2rem] border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur-md">
+        
+        <div className="mb-5 flex items-center gap-3">
+          <span className="text-3xl">🌱</span>
+          <span className="text-sm font-medium tracking-wide text-[#78ad70]">Bloom</span>
+        </div>
+
+        <h1 className="text-2xl font-semibold text-[#234b36]">
+          Your journey
+        </h1>
+
+        <p className="mt-2 text-sm text-[#527060]">
+          Not about streaks. Just moments you showed up.
+        </p>
+
+        {/* Stats */}
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl bg-[#f5fbf6] p-4 text-center border border-[#dff0e6]">
+            <p className="text-3xl font-semibold text-[#234b36]">
+              {JSON.parse(localStorage.getItem('bloom_history') || '[]').length}
+            </p>
+            <p className="text-xs text-[#78ad70]">Moments with Bloom</p>
+          </div>
+          
+          <div className="rounded-2xl bg-[#f5fbf6] p-4 text-center border border-[#dff0e6]">
+            <p className="text-3xl font-semibold text-[#234b36]">
+              {localStorage.getItem('bloom_has_visited') ? '🌱' : '🌿'}
+            </p>
+            <p className="text-xs text-[#78ad70]">Garden status</p>
+          </div>
+        </div>
+
+        {/* Activity breakdown */}
+        <div className="mt-5 rounded-2xl bg-[#f5fbf6] p-4 border border-[#dff0e6]">
+          <p className="text-sm font-medium text-[#78ad70]">Recent moments</p>
+          <div className="mt-2 space-y-2 max-h-32 overflow-y-auto">
+            {JSON.parse(localStorage.getItem('bloom_history') || '[]').slice(-3).reverse().map((item, i) => (
+              <div key={i} className="flex items-center justify-between border-b border-[#dff0e6] pb-2 text-sm">
+                <span className="text-[#527060]">
+                  {item.type === 'breath' && '🌬️ Took a breath'}
+                  {item.type === 'notice' && '👀 Noticed things'}
+                  {item.type === 'write' && '✍️ Wrote something'}
+                </span>
+                <span className="text-xs text-[#78ad70]">
+                  {new Date(item.date).toLocaleDateString()}
+                </span>
+              </div>
+            ))}
+            {JSON.parse(localStorage.getItem('bloom_history') || '[]').length === 0 && (
+              <p className="text-sm text-[#78ad70] italic">No moments yet. That's okay.</p>
+            )}
+          </div>
+        </div>
+
+        <button
+          onClick={() => setScreen("welcome")}
+          className="
+            mt-5 w-full rounded-full bg-[#315f42] px-8 py-4
+            font-medium text-white shadow-md
+            transition-all hover:-translate-y-0.5
+            hover:bg-[#264d35] active:scale-95
+          "
+        >
+          Back to garden 🌿
+        </button>
+
+      </div>
+    </div>
+  </div>
+)}          
 
 
       {/* =========================
