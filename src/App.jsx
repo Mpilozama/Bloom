@@ -238,9 +238,7 @@ function App() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-[var(--mist)]">
-      <section
-        className={`relative mx-auto min-h-screen max-w-6xl overflow-hidden bg-gradient-to-b transition-colors duration-1000 ${WORLD_SKY[timeOfDay].sky}`}
-      >
+      <section className={`relative mx-auto min-h-screen max-w-6xl overflow-hidden bg-gradient-to-b transition-colors duration-1000 ${WORLD_SKY[timeOfDay].sky}`}>
         {/* Persistent identity bar — present from the very first frame,
             not gated behind the welcome animation. Fixes the "nav shows
             up too late" problem at its root. */}
@@ -269,6 +267,8 @@ function App() {
             </div>
           )}
         </div>
+
+      </section>
 
         {/* =========================
             SKY — reflects the real time of day, whether or not
@@ -522,76 +522,57 @@ function App() {
             SCREEN: REFLECTION — an actual back-and-forth with Bloom,
             not a single fire-and-forget reply.
         ================================================== */}
-        {screen === "reflection" && (
-          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-            <div className="w-full max-w-lg animate-fadeIn">
-              <div className="panel flex max-h-[80vh] flex-col p-6">
-                <div className="mb-3 flex items-center gap-2 px-1">
-                  <span className="text-xl">🌱</span>
-                  <Wordmark />
-                </div>
 
-                <div className="flex-1 space-y-3 overflow-y-auto px-1 py-2">
-                  {conversation.map((message, index) => (
-                    <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                      <div
-                        className={`max-w-[85%] px-4 py-2.5 text-sm leading-relaxed ${
-                          message.role === "user" ? "chat-bubble-user" : "chat-bubble-bloom text-[var(--ink)]"
-                        }`}
-                      >
-                        {message.text}
-                      </div>
-                    </div>
-                  ))}
+{screen === "reflection" && (
+  <div className="absolute bottom-[38%] left-1/2 z-30 w-[min(92%,420px)] -translate-x-1/2 animate-fadeIn">
+    <div className="panel-bubble px-6 py-5">
+      {customFeeling && (
+        <p className="mb-2 text-xs italic text-[var(--moss)]">You said: "{customFeeling}"</p>
+      )}
 
-                  {showTyping && (
-                    <div className="flex justify-start">
-                      <div className="chat-bubble-bloom flex gap-1 px-4 py-3">
-                        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--moss)]" />
-                        <span className="delay-100 h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--moss)]" />
-                        <span className="delay-200 h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--moss)]" />
-                      </div>
-                    </div>
-                  )}
-                </div>
+      <p className="text-base leading-relaxed text-[var(--ink)]">
+        {showTyping ? "···" : conversation[conversation.length - 1]?.text}
+      </p>
 
-                <div className="mt-3 flex gap-2 border-t border-[var(--paper-line)] pt-3">
-                  <input
-                    id="chat-reply-input"
-                    type="text"
-                    placeholder="Say more, if you want to..."
-                    onKeyDown={(e) => e.key === "Enter" && continueConversation()}
-                    className="flex-1 rounded-full border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-2.5 text-sm text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none"
-                  />
-                  <button
-                    onClick={continueConversation}
-                    disabled={showTyping}
-                    aria-label="Send"
-                    className="rounded-full bg-[var(--canopy)] px-4 py-2.5 text-white transition-all hover:bg-[var(--canopy-dark)] disabled:opacity-50"
-                  >
-                    ➤
-                  </button>
-                </div>
+      {conversation.filter((m) => m.role === "user").length < 2 && !showTyping && (
+        <div className="mt-3 flex gap-2">
+          <input
+            id="chat-reply-input"
+            type="text"
+            placeholder="Say more, if you want to..."
+            onKeyDown={(e) => e.key === "Enter" && continueConversation()}
+            className="flex-1 rounded-full border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none"
+          />
+          <button
+            onClick={continueConversation}
+            aria-label="Send"
+            className="rounded-full bg-[var(--canopy)] px-3 py-2 text-white transition-all hover:bg-[var(--canopy-dark)]"
+          >
+            ➤
+          </button>
+        </div>
+      )}
 
-                <div className="mt-3 flex flex-wrap justify-center gap-2">
-                  <button
-                    onClick={() => setScreen("recommendation")}
-                    className="rounded-full bg-[var(--canopy)] px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-                  >
-                    💬 Talk it through
-                  </button>
-                  <button
-                    onClick={() => setScreen("progress")}
-                    className="rounded-full border-2 border-[var(--paper-line)] px-5 py-2 text-sm font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
-                  >
-                    🌿 Just sit with me
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </section>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          onClick={() => setScreen("recommendation")}
+          className="rounded-full bg-[var(--canopy)] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+        >
+          What might help
+        </button>
+        <button
+          onClick={() => setScreen("progress")}
+          className="rounded-full border-2 border-[var(--paper-line)] px-4 py-2 text-sm font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
+        >
+          Just sit with me
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+         
+
 
       {/* ==================================================
           SCREEN: WELLBEING OVERVIEW

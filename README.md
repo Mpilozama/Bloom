@@ -201,7 +201,7 @@ That means avoiding mechanics such as:
 * ❌ Artificial productivity scores
 * ❌ Endless check-ins
 * ❌ Rewards that encourage using the app instead of improving yourself
-
+ 
 Instead, Bloom focuses on:
 
 * ✅ Small actionable interventions
