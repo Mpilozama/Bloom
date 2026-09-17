@@ -268,8 +268,6 @@ function App() {
           )}
         </div>
 
-      </section>
-
         {/* =========================
             SKY — reflects the real time of day, whether or not
             anyone's here to see it change.
@@ -1052,6 +1050,7 @@ function App() {
       )}
 
       {screen !== "welcome" && <BottomNav screen={screen} onNavigate={navigate} />}
+     </section>
     </main>
   );
 }
