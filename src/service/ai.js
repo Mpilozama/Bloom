@@ -10,7 +10,7 @@ function pickFallback() {
 }
 
 function hasUsableKey() {
-  const key = import.meta.env.VITE_OPENAI_API_KEY;
+  const key = import.meta.env.VITE_GROQ_API_KEY;
   return Boolean(key) && key !== "your-api-key-here";
 }
 
@@ -34,16 +34,11 @@ Rules you always follow:
 /**
  * Ask Bloom's AI layer for the next line in an ongoing conversation.
  *
- * Design note (Responsible AI): this function only ever shapes *tone* and
- * conversational continuity. Whether to trust what the user said — the
- * safety-relevant judgment call — is handled separately and deterministically
- * in service/signals.js, which never touches the model. That split is
- * intentional: the part of Bloom that decides "should I be cautious here"
- * stays inspectable, not hidden inside a prompt.
+ * Uses Groq's OpenAI-compatible endpoint. Safety-relevant judgment stays in
+ * service/signals.js — this function only shapes tone and continuity.
  *
- * This never throws. If there's no key configured, or the request fails for
- * any reason, it falls back to a still-honest canned response so the app
- * never breaks mid-conversation.
+ * Never throws. If there's no key or the request fails, falls back to a
+ * canned response so the app never breaks mid-conversation.
  */
 export async function getBloomResponse(userMessage, context = "") {
   if (!hasUsableKey()) {
@@ -59,14 +54,14 @@ export async function getBloomResponse(userMessage, context = "") {
   `;
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+        Authorization: `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "llama-3.1-8b-instant",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userPrompt },
