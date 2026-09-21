@@ -100,6 +100,8 @@ function App() {
   const [breathPhase, setBreathPhase] = useState("inhale");
   const [breathCycles, setBreathCycles] = useState(1);
   const [writePrompt, setWritePrompt] = useState(WRITE_PROMPTS[0]);
+  const [reachOutPrompt, setReachOutPrompt] = useState(REACH_OUT_PROMPTS[0]);
+
   const [timeOfDay, setTimeOfDay] = useState(() => getTimeOfDay());
   const [awayNote] = useState(() => checkInOnTheWorld());
   const breathTimeoutRef = useRef(null);
@@ -147,6 +149,11 @@ function App() {
     setWritePrompt(WRITE_PROMPTS[Math.floor(Math.random() * WRITE_PROMPTS.length)]);
     setScreen("activity-write");
   };
+
+  const openActivityReachOut = () => {
+  setReachOutPrompt(REACH_OUT_PROMPTS[Math.floor(Math.random() * REACH_OUT_PROMPTS.length)]);
+  setScreen("activity-reach-out");
+};
 
   const addHistoryEntry = (entry) => {
     setHistory((prev) => {
@@ -556,7 +563,12 @@ function App() {
           >
             ➤
           </button>
+
+          
         </div>
+
+
+
       )}
 
       <div className="mt-4 flex flex-wrap gap-2">
@@ -670,6 +682,20 @@ function App() {
                   </div>
                 </button>
 
+
+                <button
+                  onClick={openActivityReachOut}
+                  className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">📮</span>
+                    <div>
+                      <p className="font-medium text-[var(--canopy-dark)]">Reach out to someone</p>
+                      <p className="text-sm text-[var(--moss)]">Sometimes a person helps more than I can</p>
+                    </div>
+                  </div>
+                </button>
+
                 <button
                   onClick={() => setScreen("activity-notice")}
                   className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
@@ -705,7 +731,12 @@ function App() {
               </button>
             </div>
           </div>
+          
         </div>
+
+
+
+
       )}
 
       {/* ==================================================
