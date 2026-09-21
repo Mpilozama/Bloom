@@ -11,10 +11,6 @@ function pickFallback() {
 
 function hasUsableKey() {
   const key = import.meta.env.VITE_GROQ_API_KEY;
-  console.log("=== Groq key check ===");
-  console.log("Key value (first 8 chars):", key ? key.slice(0, 8) : "MISSING");
-  console.log("Key length:", key ? key.length : 0);
-  console.log("Is placeholder:", key === "your-api-key-here");
   return Boolean(key) && key !== "your-api-key-here";
 }
 

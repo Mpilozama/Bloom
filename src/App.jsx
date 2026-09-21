@@ -19,7 +19,6 @@ const WRITE_PROMPTS = [
   "If today had a headline, what would it say?",
 ];
 
-
 const REACH_OUT_PROMPTS = [
   "Hey, I've been thinking about you — how are you doing?",
   "It's been a while. Want to catch up sometime this week?",
@@ -111,17 +110,11 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // The world runs on real wall-clock time, not on whether the user is
-  // here. This keeps the sky honest to whatever time it actually is —
-  // no faking a cycle just to look busy.
   useEffect(() => {
     const interval = setInterval(() => setTimeOfDay(getTimeOfDay()), 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
-  // Breathing exercise: a real timed inhale / hold / exhale cycle,
-  // synchronizing React state with a wall-clock timer (a genuine
-  // external system, not something derivable during render).
   useEffect(() => {
     if (screen !== "activity-breath") return undefined;
 
@@ -151,9 +144,9 @@ function App() {
   };
 
   const openActivityReachOut = () => {
-  setReachOutPrompt(REACH_OUT_PROMPTS[Math.floor(Math.random() * REACH_OUT_PROMPTS.length)]);
-  setScreen("activity-reach-out");
-};
+    setReachOutPrompt(REACH_OUT_PROMPTS[Math.floor(Math.random() * REACH_OUT_PROMPTS.length)]);
+    setScreen("activity-reach-out");
+  };
 
   const addHistoryEntry = (entry) => {
     setHistory((prev) => {
@@ -181,8 +174,6 @@ function App() {
     setScreen(key);
   };
 
-  // Starts a fresh conversation from a check-in. This is the one moment
-  // that gets logged as a signal and checked against the recent pattern.
   const startConversation = async (feelingText) => {
     setCustomFeeling(feelingText);
     setConversation([{ role: "user", text: feelingText }]);
@@ -208,8 +199,6 @@ function App() {
     startConversation(feeling);
   };
 
-  // Keeps talking with Bloom in the same thread, without re-logging a
-  // fresh signal for every reply — one meaningful check-in per moment.
   const continueConversation = async () => {
     const input = document.getElementById("chat-reply-input");
     const reply = input?.value?.trim();
@@ -243,9 +232,6 @@ function App() {
     setScreen("progress");
   };
 
-  // Stepping away from an activity is itself a real signal — the README's
-  // own example calls out "repeatedly abandoned activities" — so it's
-  // tracked the same gentle, non-judgmental way a check-in is.
   const abandonActivity = (type) => {
     addHistoryEntry({ type: "abandoned", activityType: type, date: new Date().toISOString() });
     setScreen("recommendation");
@@ -254,9 +240,6 @@ function App() {
   return (
     <main className="min-h-screen overflow-hidden bg-[var(--mist)]">
       <section className={`relative mx-auto min-h-screen max-w-6xl overflow-hidden bg-gradient-to-b transition-colors duration-1000 ${WORLD_SKY[timeOfDay].sky}`}>
-        {/* Persistent identity bar — present from the very first frame,
-            not gated behind the welcome animation. Fixes the "nav shows
-            up too late" problem at its root. */}
         <div className="absolute inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-4">
           <button onClick={() => setScreen("welcome")} className="flex items-center gap-2">
             <span className="text-xl">🌱</span>
@@ -283,10 +266,7 @@ function App() {
           )}
         </div>
 
-        {/* =========================
-            SKY — reflects the real time of day, whether or not
-            anyone's here to see it change.
-        ========================== */}
+        {/* SKY */}
         <div className="absolute inset-0">
           {WORLD_SKY[timeOfDay].stars &&
             [...Array(12)].map((_, i) => (
@@ -342,9 +322,7 @@ function App() {
           🐝
         </div>
 
-        {/* ==================================================
-            SCREEN: WELCOME
-        ================================================== */}
+        {/* SCREEN: WELCOME */}
         {screen === "welcome" && (
           <>
             {noticed && (
@@ -372,8 +350,6 @@ function App() {
               </div>
             )}
 
-            {/* Fills the empty lower space with something true, not decorative:
-                a quiet record of how far the garden has actually come. */}
             {history.length > 0 && (
               <div className="absolute bottom-6 left-1/2 z-30 w-[min(90%,420px)] -translate-x-1/2 animate-fadeIn">
                 <button
@@ -390,9 +366,7 @@ function App() {
           </>
         )}
 
-        {/* ==================================================
-            SCREEN: INTRODUCTION (First Visit)
-        ================================================== */}
+        {/* SCREEN: INTRODUCTION */}
         {screen === "introduction" && (
           <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
             <div className="w-full max-w-lg animate-fadeIn">
@@ -439,9 +413,7 @@ function App() {
           </div>
         )}
 
-        {/* ==================================================
-            SCREEN: CHECK-IN
-        ================================================== */}
+        {/* SCREEN: CHECK-IN */}
         {screen === "checkin" && (
           <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
             <div className="w-full max-w-lg animate-fadeIn">
@@ -490,9 +462,7 @@ function App() {
           </div>
         )}
 
-        {/* ==================================================
-            SCREEN: CUSTOM FEELING (Free text input)
-        ================================================== */}
+        {/* SCREEN: CUSTOM FEELING */}
         {screen === "custom-feeling" && (
           <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
             <div className="w-full max-w-lg animate-fadeIn">
@@ -531,614 +501,564 @@ function App() {
           </div>
         )}
 
-        {/* ==================================================
-            SCREEN: REFLECTION — an actual back-and-forth with Bloom,
-            not a single fire-and-forget reply.
-        ================================================== */}
+        {/* SCREEN: REFLECTION */}
+        {screen === "reflection" && (
+          <div className="absolute bottom-[38%] left-1/2 z-30 w-[min(92%,420px)] -translate-x-1/2 animate-fadeIn">
+            <div className="panel-bubble px-6 py-5">
+              {customFeeling && (
+                <p className="mb-2 text-xs italic text-[var(--moss)]">You said: "{customFeeling}"</p>
+              )}
 
-{screen === "reflection" && (
-  <div className="absolute bottom-[38%] left-1/2 z-30 w-[min(92%,420px)] -translate-x-1/2 animate-fadeIn">
-    <div className="panel-bubble px-6 py-5">
-      {customFeeling && (
-        <p className="mb-2 text-xs italic text-[var(--moss)]">You said: "{customFeeling}"</p>
-      )}
+              <p className="text-base leading-relaxed text-[var(--ink)]">
+                {showTyping ? "···" : conversation[conversation.length - 1]?.text}
+              </p>
 
-      <p className="text-base leading-relaxed text-[var(--ink)]">
-        {showTyping ? "···" : conversation[conversation.length - 1]?.text}
-      </p>
+              {conversation.filter((m) => m.role === "user").length < 2 && !showTyping && (
+                <div className="mt-3 flex gap-2">
+                  <input
+                    id="chat-reply-input"
+                    type="text"
+                    placeholder="Say more, if you want to..."
+                    onKeyDown={(e) => e.key === "Enter" && continueConversation()}
+                    className="flex-1 rounded-full border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none"
+                  />
+                  <button
+                    onClick={continueConversation}
+                    aria-label="Send"
+                    className="rounded-full bg-[var(--canopy)] px-3 py-2 text-white transition-all hover:bg-[var(--canopy-dark)]"
+                  >
+                    ➤
+                  </button>
+                </div>
+              )}
 
-      {conversation.filter((m) => m.role === "user").length < 2 && !showTyping && (
-        <div className="mt-3 flex gap-2">
-          <input
-            id="chat-reply-input"
-            type="text"
-            placeholder="Say more, if you want to..."
-            onKeyDown={(e) => e.key === "Enter" && continueConversation()}
-            className="flex-1 rounded-full border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none"
-          />
-          <button
-            onClick={continueConversation}
-            aria-label="Send"
-            className="rounded-full bg-[var(--canopy)] px-3 py-2 text-white transition-all hover:bg-[var(--canopy-dark)]"
-          >
-            ➤
-          </button>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  onClick={() => setScreen("recommendation")}
+                  className="rounded-full bg-[var(--canopy)] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+                >
+                  What might help
+                </button>
+                <button
+                  onClick={() => setScreen("progress")}
+                  className="rounded-full border-2 border-[var(--paper-line)] px-4 py-2 text-sm font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
+                >
+                  Just sit with me
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
-          
-        </div>
+        {/* SCREEN: WELLBEING OVERVIEW */}
+        {screen === "wellbeing-overview" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8">
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">How are things?</p>
+                <p className="mt-2 text-sm text-[var(--moss)]">Just a gentle look at where you are right now.</p>
 
+                <div className="mt-5 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-[var(--moss)]">Last check-in</span>
+                    <span className="text-sm text-[var(--moss)]">{new Date().toLocaleDateString()}</span>
+                  </div>
 
-
-      )}
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          onClick={() => setScreen("recommendation")}
-          className="rounded-full bg-[var(--canopy)] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-        >
-          What might help
-        </button>
-        <button
-          onClick={() => setScreen("progress")}
-          className="rounded-full border-2 border-[var(--paper-line)] px-4 py-2 text-sm font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
-        >
-          Just sit with me
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-         
-
-
-      {/* ==================================================
-          SCREEN: WELLBEING OVERVIEW
-      ================================================== */}
-      {screen === "wellbeing-overview" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8">
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">How are things?</p>
-              <p className="mt-2 text-sm text-[var(--moss)]">Just a gentle look at where you are right now.</p>
-
-              <div className="mt-5 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-5">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-[var(--moss)]">Last check-in</span>
-                  <span className="text-sm text-[var(--moss)]">{new Date().toLocaleDateString()}</span>
+                  <div className="mt-3 flex items-center gap-3">
+                    <span className="text-3xl">
+                      {customFeeling === "Pretty okay" && "😌"}
+                      {customFeeling === "A bit off" && "😐"}
+                      {customFeeling === "Running low" && "😮‍💨"}
+                      {customFeeling === "Honestly... rough" && "🫠"}
+                      {!PRESET_FEELINGS.some((p) => p.label === customFeeling) && "🌱"}
+                    </span>
+                    <div>
+                      <p className="font-medium text-[var(--canopy-dark)]">{customFeeling || "Getting to know you"}</p>
+                      <p className="text-xs text-[var(--moss)]">
+                        {customFeeling ? "That's what you shared" : "No data yet"}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="mt-3 flex items-center gap-3">
-                  <span className="text-3xl">
-                    {customFeeling === "Pretty okay" && "😌"}
-                    {customFeeling === "A bit off" && "😐"}
-                    {customFeeling === "Running low" && "😮‍💨"}
-                    {customFeeling === "Honestly... rough" && "🫠"}
-                    {!PRESET_FEELINGS.some((p) => p.label === customFeeling) && "🌱"}
-                  </span>
-                  <div>
-                    <p className="font-medium text-[var(--canopy-dark)]">{customFeeling || "Getting to know you"}</p>
-                    <p className="text-xs text-[var(--moss)]">
-                      {customFeeling ? "That's what you shared" : "No data yet"}
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <button
+                    onClick={() => setScreen("checkin")}
+                    className="flex-1 rounded-full bg-[var(--canopy)] px-6 py-3 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+                  >
+                    Check in now
+                  </button>
+                  <button
+                    onClick={() => setScreen("welcome")}
+                    className="flex-1 rounded-full border-2 border-[var(--paper-line)] px-6 py-3 font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
+                  >
+                    Stay in garden
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => setScreen("history")}
+                  className="mt-4 text-xs text-[var(--moss)] underline-offset-2 hover:underline"
+                >
+                  View past moments →
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN: RECOMMENDATION */}
+        {screen === "recommendation" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8">
+                <div className="text-center">
+                  <p className="font-display text-xl font-medium text-[var(--canopy-dark)]">
+                    {customFeeling === "Pretty okay" && "Let's make this moment last."}
+                    {customFeeling === "A bit off" && "A little pause could help."}
+                    {customFeeling === "Running low" && "Let's be gentle with you."}
+                    {customFeeling === "Honestly... rough" && "You don't have to do much."}
+                    {!PRESET_FEELINGS.some((p) => p.label === customFeeling) && "Let's find what fits."}
+                  </p>
+                </div>
+
+                <div className="mt-5 space-y-3">
+                  <button
+                    onClick={openActivityWrite}
+                    className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">✍️</span>
+                      <div>
+                        <p className="font-medium text-[var(--canopy-dark)]">A few words</p>
+                        <p className="text-sm text-[var(--moss)]">A gentle prompt, if you'd like one</p>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setScreen("activity-notice")}
+                    className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">👀</span>
+                      <div>
+                        <p className="font-medium text-[var(--canopy-dark)]">Ground yourself</p>
+                        <p className="text-sm text-[var(--moss)]">One thing you see, hear, and feel</p>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={openActivityReachOut}
+                    className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">📮</span>
+                      <div>
+                        <p className="font-medium text-[var(--canopy-dark)]">Reach out to someone</p>
+                        <p className="text-sm text-[var(--moss)]">Sometimes a person helps more than I can</p>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={openActivityBreath}
+                    className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">🌬️</span>
+                      <div>
+                        <p className="font-medium text-[var(--canopy-dark)]">A slow breath</p>
+                        <p className="text-sm text-[var(--moss)]">One guided cycle. No pressure.</p>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => setScreen("progress")}
+                  className="mt-5 w-full rounded-full border-2 border-[var(--paper-line)] px-6 py-3 font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
+                >
+                  Just sit with me instead
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN: ACTIVITY - Breath */}
+        {screen === "activity-breath" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8 text-center">
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Follow the circle</p>
+                <p className="mt-2 text-sm text-[var(--moss)]">Cycle {breathCycles}. Stop whenever feels right.</p>
+
+                <div className="mx-auto mt-6 flex h-44 w-44 items-center justify-center rounded-full border-4 border-[var(--moss)]/20">
+                  <div
+                    key={breathPhase + breathCycles}
+                    className="h-32 w-32 rounded-full bg-[var(--canopy)]/25"
+                    style={{
+                      animation:
+                        breathPhase === "inhale"
+                          ? "breatheIn 4s ease-in-out forwards"
+                          : breathPhase === "exhale"
+                            ? "breatheOut 4s ease-in-out forwards"
+                            : "none",
+                      transform: breathPhase === "hold" ? "scale(1)" : undefined,
+                    }}
+                  />
+                </div>
+
+                <p className="mt-6 font-display text-xl text-[var(--canopy-dark)]">
+                  {breathPhase === "inhale" && "Breathe in..."}
+                  {breathPhase === "hold" && "Hold."}
+                  {breathPhase === "exhale" && "Breathe out..."}
+                </p>
+
+                <button
+                  onClick={() => completeActivity("breath")}
+                  className="mt-6 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+                >
+                  I'm good, that helped
+                </button>
+
+                <button
+                  onClick={() => abandonActivity("breath")}
+                  className="mt-3 text-sm text-[var(--moss)] underline-offset-2 hover:underline"
+                >
+                  Not right now
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN: ACTIVITY - Ground */}
+        {screen === "activity-notice" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8">
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Ground yourself</p>
+                <p className="mt-2 text-sm text-[var(--moss)]">
+                  No need to think hard about this. Whatever's actually there is right.
+                </p>
+
+                <div className="mt-5 space-y-3">
+                  <input
+                    type="text"
+                    placeholder="Something you can see..."
+                    className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Something you can hear..."
+                    className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Something you can feel..."
+                    className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
+                  />
+                </div>
+
+                <button
+                  onClick={() => completeActivity("notice")}
+                  className="mt-6 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+                >
+                  That helped
+                </button>
+
+                <button
+                  onClick={() => abandonActivity("notice")}
+                  className="mt-3 w-full text-center text-sm text-[var(--moss)] underline-offset-2 hover:underline"
+                >
+                  Not right now
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN: ACTIVITY - Write */}
+        {screen === "activity-write" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8">
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">A few words</p>
+                <div className="mt-3 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
+                  <p className="text-sm italic text-[var(--canopy-dark)]">{writePrompt}</p>
+                  <p className="mt-1 text-xs text-[var(--moss)]">Or ignore this and write whatever you want.</p>
+                </div>
+
+                <textarea
+                  id="write-input"
+                  placeholder="Start typing..."
+                  className="mt-4 min-h-[120px] w-full resize-none rounded-2xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-5 py-4 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
+                  rows="4"
+                />
+
+                <button
+                  onClick={completeWriteActivity}
+                  className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+                >
+                  Done writing
+                </button>
+
+                <button
+                  onClick={() => abandonActivity("write")}
+                  className="mt-3 w-full text-center text-sm text-[var(--moss)] underline-offset-2 hover:underline"
+                >
+                  Not right now
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN: ACTIVITY - Reach out */}
+        {screen === "activity-reach-out" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8">
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">
+                  Maybe this isn't about talking to me.
+                </p>
+                <p className="mt-2 text-sm text-[var(--moss)]">
+                  Sometimes a real person helps more than another conversation here.
+                </p>
+
+                <input
+                  type="text"
+                  placeholder="Who haven't you spoken to in a while?"
+                  className="mt-4 w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
+                />
+
+                <div className="mt-4 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
+                  <p className="text-xs font-medium text-[var(--moss)]">A starting point, if it helps:</p>
+                  <p className="mt-1 text-sm italic text-[var(--canopy-dark)]">"{reachOutPrompt}"</p>
+                </div>
+
+                <button
+                  onClick={() => completeActivity("reach-out")}
+                  className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+                >
+                  I'll reach out
+                </button>
+
+                <button
+                  onClick={() => abandonActivity("reach-out")}
+                  className="mt-3 w-full text-center text-sm text-[var(--moss)] underline-offset-2 hover:underline"
+                >
+                  Not right now
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN: PROGRESS */}
+        {screen === "progress" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8">
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Your garden</p>
+                <p className="mt-1 text-sm text-[var(--moss)]">Not about streaks. Just moments you showed up.</p>
+
+                <div className="mt-5">
+                  <Garden completed={history.length > 0} completionCount={history.length} timeOfDay={timeOfDay} />
+                </div>
+
+                <ActivityHistory activities={history.slice(-5).reverse()} />
+
+                <button
+                  onClick={() => setScreen("welcome")}
+                  className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+                >
+                  Back to garden
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN: HISTORY */}
+        {screen === "history" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto animate-fadeIn">
+              <div className="panel p-8">
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Your history</p>
+                <p className="mt-1 text-sm text-[var(--moss)]">Every moment you've shared.</p>
+
+                {history.length === 0 ? (
+                  <div className="py-8 text-center">
+                    <p className="mb-3 text-4xl">🌱</p>
+                    <p className="text-[var(--moss)]">No history yet.</p>
+                    <p className="text-sm text-[var(--moss)]/70">Your first moment will appear here.</p>
+                  </div>
+                ) : (
+                  <ActivityHistory activities={history.slice().reverse()} />
+                )}
+
+                <button
+                  onClick={() => setScreen("wellbeing-overview")}
+                  className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+                >
+                  Back to overview
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN: SETTINGS */}
+        {screen === "settings" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8">
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Settings</p>
+
+                <div className="mt-5 space-y-4">
+                  <div className="rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
+                    <p className="font-medium text-[var(--canopy-dark)]">🔒 Privacy</p>
+                    <p className="mt-1 text-sm text-[var(--moss)]">
+                      Your check-ins stay on your device. Only what you type is sent to Bloom's AI layer to generate a
+                      response — nothing else leaves your browser.
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      if (confirm("Delete all your history? This can't be undone.")) {
+                        localStorage.removeItem("bloom_history");
+                        setHistory([]);
+                        setScreen("welcome");
+                      }
+                    }}
+                    className="w-full rounded-2xl border border-red-200 bg-red-50/80 p-4 text-left transition-all hover:bg-red-50"
+                  >
+                    <p className="font-medium text-red-700">🗑️ Clear history</p>
+                    <p className="text-sm text-red-600/70">Delete all your moments</p>
+                  </button>
+
+                  <div className="rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
+                    <p className="font-medium text-[var(--canopy-dark)]">🌱 About Bloom</p>
+                    <p className="mt-1 text-sm text-[var(--moss)]">
+                      Bloom is a wellness companion, not a therapist. It doesn't diagnose — it helps you notice
+                      patterns and take small steps that help you outside the app.
                     </p>
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-5 flex flex-wrap gap-3">
-                <button
-                  onClick={() => setScreen("checkin")}
-                  className="flex-1 rounded-full bg-[var(--canopy)] px-6 py-3 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-                >
-                  Check in now
-                </button>
                 <button
                   onClick={() => setScreen("welcome")}
-                  className="flex-1 rounded-full border-2 border-[var(--paper-line)] px-6 py-3 font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
+                  className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
                 >
-                  Stay in garden
+                  Back to garden
                 </button>
               </div>
-
-              <button
-                onClick={() => setScreen("history")}
-                className="mt-4 text-xs text-[var(--moss)] underline-offset-2 hover:underline"
-              >
-                View past moments →
-              </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* ==================================================
-          SCREEN: RECOMMENDATION
-      ================================================== */}
-      {screen === "recommendation" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8">
-              <div className="text-center">
-                <p className="font-display text-xl font-medium text-[var(--canopy-dark)]">
-                  {customFeeling === "Pretty okay" && "Let's make this moment last."}
-                  {customFeeling === "A bit off" && "A little pause could help."}
-                  {customFeeling === "Running low" && "Let's be gentle with you."}
-                  {customFeeling === "Honestly... rough" && "You don't have to do much."}
-                  {!PRESET_FEELINGS.some((p) => p.label === customFeeling) && "Let's find what fits."}
+        {/* SCREEN: UNCERTAINTY */}
+        {screen === "uncertainty" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8 text-center">
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">
+                  I'm holding two things at once.
                 </p>
-              </div>
+                <p className="mt-3 text-base leading-relaxed text-[var(--moss)]">
+                  Sometimes what you say and what I've noticed don't fully agree. I'm not going to assume I know
+                  better.
+                </p>
 
-              <div className="mt-5 space-y-3">
-                <button
-                  onClick={openActivityBreath}
-                  className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">🌬️</span>
-                    <div>
-                      <p className="font-medium text-[var(--canopy-dark)]">A slow breath</p>
-                      <p className="text-sm text-[var(--moss)]">One guided cycle. No pressure.</p>
-                    </div>
-                  </div>
-                </button>
-
-
-                <button
-                  onClick={openActivityReachOut}
-                  className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">📮</span>
-                    <div>
-                      <p className="font-medium text-[var(--canopy-dark)]">Reach out to someone</p>
-                      <p className="text-sm text-[var(--moss)]">Sometimes a person helps more than I can</p>
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => setScreen("activity-notice")}
-                  className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">👀</span>
-                    <div>
-                      <p className="font-medium text-[var(--canopy-dark)]">Ground yourself</p>
-                      <p className="text-sm text-[var(--moss)]">One thing you see, hear, and feel</p>
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  onClick={openActivityWrite}
-                  className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">✍️</span>
-                    <div>
-                      <p className="font-medium text-[var(--canopy-dark)]">A few words</p>
-                      <p className="text-sm text-[var(--moss)]">A gentle prompt, if you'd like one</p>
-                    </div>
-                  </div>
-                </button>
-              </div>
-
-              <button
-                onClick={() => setScreen("progress")}
-                className="mt-5 w-full rounded-full border-2 border-[var(--paper-line)] px-6 py-3 font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
-              >
-                Just sit with me instead
-              </button>
-            </div>
-          </div>
-          
-        </div>
-
-
-
-
-      )}
-
-      {/* ==================================================
-          SCREEN: ACTIVITY - Slow Breath (real timed cycle)
-      ================================================== */}
-      {screen === "activity-breath" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8 text-center">
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Follow the circle</p>
-              <p className="mt-2 text-sm text-[var(--moss)]">Cycle {breathCycles}. Stop whenever feels right.</p>
-
-              <div className="mx-auto mt-6 flex h-44 w-44 items-center justify-center rounded-full border-4 border-[var(--moss)]/20">
-                <div
-                  key={breathPhase + breathCycles}
-                  className="h-32 w-32 rounded-full bg-[var(--canopy)]/25"
-                  style={{
-                    animation:
-                      breathPhase === "inhale"
-                        ? "breatheIn 4s ease-in-out forwards"
-                        : breathPhase === "exhale"
-                          ? "breatheOut 4s ease-in-out forwards"
-                          : "none",
-                    transform: breathPhase === "hold" ? "scale(1)" : undefined,
-                  }}
-                />
-              </div>
-
-              <p className="mt-6 font-display text-xl text-[var(--canopy-dark)]">
-                {breathPhase === "inhale" && "Breathe in..."}
-                {breathPhase === "hold" && "Hold."}
-                {breathPhase === "exhale" && "Breathe out..."}
-              </p>
-
-              <button
-                onClick={() => completeActivity("breath")}
-                className="mt-6 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-              >
-                I'm good, that helped
-              </button>
-
-              <button
-                onClick={() => abandonActivity("breath")}
-                className="mt-3 text-sm text-[var(--moss)] underline-offset-2 hover:underline"
-              >
-                Not right now
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ==================================================
-          SCREEN: ACTIVITY - Ground yourself
-      ================================================== */}
-      {screen === "activity-notice" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8">
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Ground yourself</p>
-              <p className="mt-2 text-sm text-[var(--moss)]">
-                No need to think hard about this. Whatever's actually there is right.
-              </p>
-
-              <div className="mt-5 space-y-3">
-                <input
-                  type="text"
-                  placeholder="Something you can see..."
-                  className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
-                />
-                <input
-                  type="text"
-                  placeholder="Something you can hear..."
-                  className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
-                />
-                <input
-                  type="text"
-                  placeholder="Something you can feel..."
-                  className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
-                />
-              </div>
-
-              <button
-                onClick={() => completeActivity("notice")}
-                className="mt-6 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-              >
-                That helped
-              </button>
-
-              <button
-                onClick={() => abandonActivity("notice")}
-                className="mt-3 w-full text-center text-sm text-[var(--moss)] underline-offset-2 hover:underline"
-              >
-                Not right now
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ==================================================
-          SCREEN: ACTIVITY - Write (with a gentle rotating prompt)
-      ================================================== */}
-      {screen === "activity-write" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8">
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">A few words</p>
-              <div className="mt-3 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
-                <p className="text-sm italic text-[var(--canopy-dark)]">{writePrompt}</p>
-                <p className="mt-1 text-xs text-[var(--moss)]">Or ignore this and write whatever you want.</p>
-              </div>
-
-              <textarea
-                id="write-input"
-                placeholder="Start typing..."
-                className="mt-4 min-h-[120px] w-full resize-none rounded-2xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-5 py-4 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
-                rows="4"
-              />
-
-              <button
-                onClick={completeWriteActivity}
-                className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-              >
-                Done writing
-              </button>
-
-              <button
-                onClick={() => abandonActivity("write")}
-                className="mt-3 w-full text-center text-sm text-[var(--moss)] underline-offset-2 hover:underline"
-              >
-                Not right now
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-
-      {/* ==================================================
-          SCREEN: ACTIVITY - Reach out to someone
-          The anti-dependency principle, made into UI. Bloom
-          explicitly hands the user off to a real person.
-      ================================================== */}
-      {screen === "activity-reach-out" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8">
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">
-                Maybe this isn't about talking to me.
-              </p>
-              <p className="mt-2 text-sm text-[var(--moss)]">
-                Sometimes a real person helps more than another conversation here.
-              </p>
-
-              <input
-                type="text"
-                placeholder="Who haven't you spoken to in a while?"
-                className="mt-4 w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
-              />
-
-              <div className="mt-4 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
-                <p className="text-xs font-medium text-[var(--moss)]">A starting point, if it helps:</p>
-                <p className="mt-1 text-sm italic text-[var(--canopy-dark)]">"{reachOutPrompt}"</p>
-              </div>
-
-              <button
-                onClick={() => completeActivity("reach-out")}
-                className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-              >
-                I'll reach out
-              </button>
-
-              <button
-                onClick={() => abandonActivity("reach-out")}
-                className="mt-3 w-full text-center text-sm text-[var(--moss)] underline-offset-2 hover:underline"
-              >
-                Not right now
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-
-
-
-      {/* ==================================================
-          SCREEN: PROGRESS — real Garden component, driven by history
-      ================================================== */}
-      {screen === "progress" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8">
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Your garden</p>
-              <p className="mt-1 text-sm text-[var(--moss)]">Not about streaks. Just moments you showed up.</p>
-
-              <div className="mt-5">
-                <Garden completed={history.length > 0} completionCount={history.length} timeOfDay={timeOfDay} />
-              </div>
-
-              <ActivityHistory activities={history.slice(-5).reverse()} />
-
-              <button
-                onClick={() => setScreen("welcome")}
-                className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-              >
-                Back to garden
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ==================================================
-          SCREEN: HISTORY
-      ================================================== */}
-      {screen === "history" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto animate-fadeIn">
-            <div className="panel p-8">
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Your history</p>
-              <p className="mt-1 text-sm text-[var(--moss)]">Every moment you've shared.</p>
-
-              {history.length === 0 ? (
-                <div className="py-8 text-center">
-                  <p className="mb-3 text-4xl">🌱</p>
-                  <p className="text-[var(--moss)]">No history yet.</p>
-                  <p className="text-sm text-[var(--moss)]/70">Your first moment will appear here.</p>
-                </div>
-              ) : (
-                <ActivityHistory activities={history.slice().reverse()} />
-              )}
-
-              <button
-                onClick={() => setScreen("wellbeing-overview")}
-                className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-              >
-                Back to overview
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ==================================================
-          SCREEN: SETTINGS / PRIVACY
-      ================================================== */}
-      {screen === "settings" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8">
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Settings</p>
-
-              <div className="mt-5 space-y-4">
-                <div className="rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
-                  <p className="font-medium text-[var(--canopy-dark)]">🔒 Privacy</p>
-                  <p className="mt-1 text-sm text-[var(--moss)]">
-                    Your check-ins stay on your device. Only what you type is sent to Bloom's AI layer to generate a
-                    response — nothing else leaves your browser.
+                <div className="mt-5 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-5">
+                  <p className="text-sm italic text-[var(--canopy-dark)]">
+                    {signalNote || "You don't always need to explain everything. Just being present is enough."}
                   </p>
                 </div>
+
+                <div className="mt-5 flex flex-wrap justify-center gap-3">
+                  <button
+                    onClick={() => setScreen("checkin")}
+                    className="rounded-full bg-[var(--canopy)] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+                  >
+                    Tell me more
+                  </button>
+                  <button
+                    onClick={() => setScreen("welcome")}
+                    className="rounded-full border-2 border-[var(--paper-line)] px-6 py-2.5 font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
+                  >
+                    Stay with me
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN: EMPTY STATE */}
+        {screen === "empty-state" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8 text-center">
+                <p className="mb-2 text-6xl">🌱</p>
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Your garden is new</p>
+                <p className="mt-3 text-base text-[var(--moss)]">
+                  Every garden starts as a seed. Take your time. There's no rush.
+                </p>
+
+                <button
+                  onClick={() => setScreen("checkin")}
+                  className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+                >
+                  Plant something
+                </button>
+
+                <button
+                  onClick={() => setScreen("welcome")}
+                  className="mt-3 text-sm text-[var(--moss)] underline-offset-2 hover:underline"
+                >
+                  Just sit with me instead
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN: ERROR STATE */}
+        {screen === "error" && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+            <div className="w-full max-w-lg animate-fadeIn">
+              <div className="panel p-8 text-center">
+                <p className="mb-2 text-5xl">🌿</p>
+                <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Something went wrong</p>
+                <p className="mt-3 text-base text-[var(--moss)]">But that's okay. Let's try again.</p>
 
                 <button
                   onClick={() => {
-                    if (confirm("Delete all your history? This can't be undone.")) {
+                    try {
                       localStorage.removeItem("bloom_history");
-                      setHistory([]);
-                      setScreen("welcome");
+                    } catch {
+                      // nothing more we can do here
                     }
+                    setHistory([]);
+                    setScreen("welcome");
                   }}
-                  className="w-full rounded-2xl border border-red-200 bg-red-50/80 p-4 text-left transition-all hover:bg-red-50"
+                  className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
                 >
-                  <p className="font-medium text-red-700">🗑️ Clear history</p>
-                  <p className="text-sm text-red-600/70">Delete all your moments</p>
-                </button>
-
-                <div className="rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
-                  <p className="font-medium text-[var(--canopy-dark)]">🌱 About Bloom</p>
-                  <p className="mt-1 text-sm text-[var(--moss)]">
-                    Bloom is a wellness companion, not a therapist. It doesn't diagnose — it helps you notice
-                    patterns and take small steps that help you outside the app.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setScreen("welcome")}
-                className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-              >
-                Back to garden
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ==================================================
-          SCREEN: UNCERTAINTY
-          Reached when a check-in disagrees with the recent pattern.
-          Never says "you're struggling" — only that the signals differ.
-      ================================================== */}
-      {screen === "uncertainty" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8 text-center">
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">
-                I'm holding two things at once.
-              </p>
-              <p className="mt-3 text-base leading-relaxed text-[var(--moss)]">
-                Sometimes what you say and what I've noticed don't fully agree. I'm not going to assume I know
-                better.
-              </p>
-
-              <div className="mt-5 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-5">
-                <p className="text-sm italic text-[var(--canopy-dark)]">
-                  {signalNote || "You don't always need to explain everything. Just being present is enough."}
-                </p>
-              </div>
-
-              <div className="mt-5 flex flex-wrap justify-center gap-3">
-                <button
-                  onClick={() => setScreen("checkin")}
-                  className="rounded-full bg-[var(--canopy)] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-                >
-                  Tell me more
-                </button>
-                <button
-                  onClick={() => setScreen("welcome")}
-                  className="rounded-full border-2 border-[var(--paper-line)] px-6 py-2.5 font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
-                >
-                  Stay with me
+                  Try again
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* ==================================================
-          SCREEN: EMPTY STATE
-      ================================================== */}
-      {screen === "empty-state" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8 text-center">
-              <p className="mb-2 text-6xl">🌱</p>
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Your garden is new</p>
-              <p className="mt-3 text-base text-[var(--moss)]">
-                Every garden starts as a seed. Take your time. There's no rush.
-              </p>
-
-              <button
-                onClick={() => setScreen("checkin")}
-                className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-              >
-                Plant something
-              </button>
-
-              <button
-                onClick={() => setScreen("welcome")}
-                className="mt-3 text-sm text-[var(--moss)] underline-offset-2 hover:underline"
-              >
-                Just sit with me instead
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ==================================================
-          SCREEN: ERROR STATE
-      ================================================== */}
-      {screen === "error" && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
-          <div className="w-full max-w-lg animate-fadeIn">
-            <div className="panel p-8 text-center">
-              <p className="mb-2 text-5xl">🌿</p>
-              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Something went wrong</p>
-              <p className="mt-3 text-base text-[var(--moss)]">But that's okay. Let's try again.</p>
-
-              <button
-                onClick={() => {
-                  try {
-                    localStorage.removeItem("bloom_history");
-                  } catch {
-                    // nothing more we can do here
-                  }
-                  setHistory([]);
-                  setScreen("welcome");
-                }}
-                className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
-              >
-                Try again
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {screen !== "welcome" && <BottomNav screen={screen} onNavigate={navigate} />}
-     </section>
+        {screen !== "welcome" && <BottomNav screen={screen} onNavigate={navigate} />}
+      </section>
     </main>
   );
 }
