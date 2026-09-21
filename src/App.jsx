@@ -19,6 +19,14 @@ const WRITE_PROMPTS = [
   "If today had a headline, what would it say?",
 ];
 
+
+const REACH_OUT_PROMPTS = [
+  "Hey, I've been thinking about you — how are you doing?",
+  "It's been a while. Want to catch up sometime this week?",
+  "Just wanted to check in on you.",
+  "I miss talking to you. Free for a call soon?",
+];
+
 const NAV_ITEMS = [
   { key: "checkin", icon: "💬", label: "Check in" },
   { key: "wellbeing-overview", icon: "📊", label: "Overview" },
