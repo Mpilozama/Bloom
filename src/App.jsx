@@ -875,6 +875,55 @@ function App() {
         </div>
       )}
 
+
+      {/* ==================================================
+          SCREEN: ACTIVITY - Reach out to someone
+          The anti-dependency principle, made into UI. Bloom
+          explicitly hands the user off to a real person.
+      ================================================== */}
+      {screen === "activity-reach-out" && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center px-6">
+          <div className="w-full max-w-lg animate-fadeIn">
+            <div className="panel p-8">
+              <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">
+                Maybe this isn't about talking to me.
+              </p>
+              <p className="mt-2 text-sm text-[var(--moss)]">
+                Sometimes a real person helps more than another conversation here.
+              </p>
+
+              <input
+                type="text"
+                placeholder="Who haven't you spoken to in a while?"
+                className="mt-4 w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
+              />
+
+              <div className="mt-4 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
+                <p className="text-xs font-medium text-[var(--moss)]">A starting point, if it helps:</p>
+                <p className="mt-1 text-sm italic text-[var(--canopy-dark)]">"{reachOutPrompt}"</p>
+              </div>
+
+              <button
+                onClick={() => completeActivity("reach-out")}
+                className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
+              >
+                I'll reach out
+              </button>
+
+              <button
+                onClick={() => abandonActivity("reach-out")}
+                className="mt-3 w-full text-center text-sm text-[var(--moss)] underline-offset-2 hover:underline"
+              >
+                Not right now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+
+
       {/* ==================================================
           SCREEN: PROGRESS — real Garden component, driven by history
       ================================================== */}
