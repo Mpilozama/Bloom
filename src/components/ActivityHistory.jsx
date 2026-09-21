@@ -2,6 +2,7 @@ const ACTIVITY_LABELS = {
   breath: "🌬️ Took a breath",
   notice: "👀 Noticed things",
   write: "✍️ Wrote something",
+  "reach-out": "💌 Reached out to someone",
   checkin: "💬 Checked in",
 };
 
