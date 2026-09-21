@@ -307,14 +307,17 @@ function App() {
         <div className="absolute bottom-[18%] left-[38%] text-xl">🌱</div>
         <div className="absolute bottom-[20%] right-[38%] text-xl">🌱</div>
 
+    
         <div
-          className={`absolute bottom-[20%] left-1/2 z-20 -translate-x-1/2 transition-all duration-1000 ease-out ${
-            noticed ? "scale-105" : "animate-[bloomIdle_3s_ease-in-out_infinite]"
+          className={`absolute bottom-[20%] left-1/2 z-20 transition-all duration-1000 ease-out ${
+            noticed
+              ? "animate-[orient_0.9s_ease-out_forwards]"
+              : "-translate-x-1/2 animate-[bloomIdle_3s_ease-in-out_infinite]"
           }`}
         >
           <img src="/assets/Bloom.svg" alt="Bloom" className="w-44 drop-shadow-lg" />
         </div>
-
+        
         <div className="absolute bottom-[30%] left-[12%] text-lg animate-[floatSimple_5s_ease-in-out_infinite]">
           🦋
         </div>
