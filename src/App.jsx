@@ -315,7 +315,7 @@ function App() {
               : "-translate-x-1/2 animate-[bloomIdle_3s_ease-in-out_infinite]"
           }`}
         >
-          <img src="/assets/Bloom.svg" alt="Bloom" className="w-44 drop-shadow-lg" />
+          <img src="public\assets\Bloom.svg" alt="Bloom" className="w-44 drop-shadow-lg" />
         </div>
         
         <div className="absolute bottom-[30%] left-[12%] text-lg animate-[floatSimple_5s_ease-in-out_infinite]">

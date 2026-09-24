@@ -64,6 +64,18 @@ const LONG_AWAY_EVENTS = [
   "The garden had a quiet stretch. Bloom didn't mind.",
 ];
 
+const IDLE_MOMENTS = {
+  dawn: ["watching the mist settle", "listening to the first birds"],
+  day: ["watching a butterfly go by", "enjoying the sun"],
+  dusk: ["watching the sky change color"],
+  night: ["watching the stars", "listening to the crickets"],
+};
+
+export function getIdleMoment(timeOfDay) {
+  const pool = IDLE_MOMENTS[timeOfDay] || IDLE_MOMENTS.day;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 /**
  * Reads how long it's been since the person was last here, returns a
  * short, honest "while you were away" note (or nothing, if it's only
