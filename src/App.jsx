@@ -3,7 +3,7 @@ import Garden from "./components/garden/Garden.jsx";
 import ActivityHistory from "./components/ActivityHistory.jsx";
 import { getBloomResponse } from "./service/ai.js";
 import { assessSignal, summarizeHistory } from "./service/signals.js";
-import { getTimeOfDay, WORLD_SKY, checkInOnTheWorld } from "./service/world.js";
+import { getTimeOfDay, WORLD_SKY, checkInOnTheWorld, getIdleMoment } from "./service/world.js";
 
 const PRESET_FEELINGS = [
   { emoji: "😌", label: "Pretty okay" },
@@ -103,6 +103,7 @@ function App() {
 
   const [timeOfDay, setTimeOfDay] = useState(() => getTimeOfDay());
   const [awayNote] = useState(() => checkInOnTheWorld());
+  const [idleMoment, setIdleMoment] = useState(null);
   const breathTimeoutRef = useRef(null);
 
   useEffect(() => {
@@ -131,6 +132,15 @@ function App() {
     breathTimeoutRef.current = setTimeout(advance, 4000);
     return () => clearTimeout(breathTimeoutRef.current);
   }, [screen]);
+
+
+  useEffect(() => {
+  if (screen !== "welcome" || !noticed) return undefined;
+  const tick = () => setIdleMoment(getIdleMoment(timeOfDay));
+  tick();
+  const interval = setInterval(tick, 9000);
+  return () => clearInterval(interval);
+}, [screen, noticed, timeOfDay]);
 
   const openActivityBreath = () => {
     setBreathPhase("inhale");
@@ -315,8 +325,19 @@ function App() {
               : "-translate-x-1/2 animate-[bloomIdle_3s_ease-in-out_infinite]"
           }`}
         >
-          <img src="public\assets\Bloom.svg" alt="Bloom" className="w-44 drop-shadow-lg" />
+          <img src="/assets/Bloom.svg" alt="Bloom" className="w-44 drop-shadow-lg" />
         </div>
+
+        
+
+      {screen === "welcome" && noticed && idleMoment && (
+        <div
+          key={idleMoment}
+          className="absolute bottom-[46%] left-1/2 z-20 -translate-x-1/2 animate-fadeIn rounded-full bg-white/70 px-3 py-1 text-xs text-[var(--canopy-dark)] shadow-sm"
+        >
+          {idleMoment}
+        </div>
+      )}
         
         <div className="absolute bottom-[30%] left-[12%] text-lg animate-[floatSimple_5s_ease-in-out_infinite]">
           🦋
