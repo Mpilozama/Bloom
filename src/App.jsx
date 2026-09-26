@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Garden from "./components/garden/Garden.jsx";
 import ActivityHistory from "./components/ActivityHistory.jsx";
 import { getBloomResponse } from "./service/ai.js";
-import { assessSignal, summarizeHistory } from "./service/signals.js";
+import { assessSignal, summarizeHistory, needsConnection } from "./service/signals.js";
 import { getTimeOfDay, WORLD_SKY, checkInOnTheWorld, getIdleMoment } from "./service/world.js";
 
 const PRESET_FEELINGS = [
@@ -100,10 +100,10 @@ function App() {
   const [breathCycles, setBreathCycles] = useState(1);
   const [writePrompt, setWritePrompt] = useState(WRITE_PROMPTS[0]);
   const [reachOutPrompt, setReachOutPrompt] = useState(REACH_OUT_PROMPTS[0]);
-
   const [timeOfDay, setTimeOfDay] = useState(() => getTimeOfDay());
   const [awayNote] = useState(() => checkInOnTheWorld());
   const [idleMoment, setIdleMoment] = useState(null);
+  const [connectionFlag, setConnectionFlag] = useState(false);
   const breathTimeoutRef = useRef(null);
 
   useEffect(() => {
@@ -133,14 +133,13 @@ function App() {
     return () => clearTimeout(breathTimeoutRef.current);
   }, [screen]);
 
-
   useEffect(() => {
-  if (screen !== "welcome" || !noticed) return undefined;
-  const tick = () => setIdleMoment(getIdleMoment(timeOfDay));
-  tick();
-  const interval = setInterval(tick, 9000);
-  return () => clearInterval(interval);
-}, [screen, noticed, timeOfDay]);
+    if (screen !== "welcome" || !noticed) return undefined;
+    const tick = () => setIdleMoment(getIdleMoment(timeOfDay));
+    tick();
+    const interval = setInterval(tick, 9000);
+    return () => clearInterval(interval);
+  }, [screen, noticed, timeOfDay]);
 
   const openActivityBreath = () => {
     setBreathPhase("inhale");
@@ -187,6 +186,7 @@ function App() {
   const startConversation = async (feelingText) => {
     setCustomFeeling(feelingText);
     setConversation([{ role: "user", text: feelingText }]);
+    setConnectionFlag(needsConnection(feelingText));
     setShowTyping(true);
     setScreen("reflection");
 
@@ -217,6 +217,7 @@ function App() {
 
     const updated = [...conversation, { role: "user", text: reply }];
     setConversation(updated);
+    if (needsConnection(reply)) setConnectionFlag(true);
     setShowTyping(true);
 
     const snippet = updated
@@ -317,7 +318,6 @@ function App() {
         <div className="absolute bottom-[18%] left-[38%] text-xl">🌱</div>
         <div className="absolute bottom-[20%] right-[38%] text-xl">🌱</div>
 
-    
         <div
           className={`absolute bottom-[20%] left-1/2 z-20 transition-all duration-1000 ease-out ${
             noticed
@@ -328,17 +328,15 @@ function App() {
           <img src="/assets/Bloom.svg" alt="Bloom" className="w-44 drop-shadow-lg" />
         </div>
 
-        
+        {screen === "welcome" && noticed && idleMoment && (
+          <div
+            key={idleMoment}
+            className="absolute bottom-[46%] left-1/2 z-20 -translate-x-1/2 animate-fadeIn rounded-full bg-white/70 px-3 py-1 text-xs text-[var(--canopy-dark)] shadow-sm"
+          >
+            {idleMoment}
+          </div>
+        )}
 
-      {screen === "welcome" && noticed && idleMoment && (
-        <div
-          key={idleMoment}
-          className="absolute bottom-[46%] left-1/2 z-20 -translate-x-1/2 animate-fadeIn rounded-full bg-white/70 px-3 py-1 text-xs text-[var(--canopy-dark)] shadow-sm"
-        >
-          {idleMoment}
-        </div>
-      )}
-        
         <div className="absolute bottom-[30%] left-[12%] text-lg animate-[floatSimple_5s_ease-in-out_infinite]">
           🦋
         </div>
@@ -645,6 +643,17 @@ function App() {
                     {!PRESET_FEELINGS.some((p) => p.label === customFeeling) && "Let's find what fits."}
                   </p>
                 </div>
+
+                {connectionFlag && (
+                  <div className="mt-5 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/60 p-4 text-center">
+                    <p className="text-sm text-[var(--moss)]">
+                      This might not be something more conversation with me solves.
+                    </p>
+                    <p className="mt-1 font-medium text-[var(--canopy-dark)]">
+                      It sounds like a person might help more than I can right now.
+                    </p>
+                  </div>
+                )}
 
                 <div className="mt-5 space-y-3">
                   <button
