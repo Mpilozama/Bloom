@@ -73,9 +73,25 @@ export function summarizeHistory(history) {
   const recent = history.slice(-4);
   if (!recent.length) return "";
   return recent
-    .map((entry) =>
-      entry.type === "abandoned" ? `stepped away from ${entry.activityType || "an activity"}` : entry.feeling || entry.type
-    )
+    .map((entry) => {
+      if (entry.type === "abandoned") return `stepped away from ${entry.activityType || "an activity"}`;
+      if (entry.type === "write" && entry.content) return `wrote: "${entry.content.slice(0, 80)}"`;
+      if (entry.type === "notice" && entry.content) return `grounded with: ${entry.content}`;
+      if (entry.type === "reach-out" && entry.content) return `planned to reach out (${entry.content.slice(0, 60)})`;
+      return entry.feeling || entry.type;
+    })
     .filter(Boolean)
     .join(", ");
+}
+
+const CONNECTION_WORDS = [
+  "isolated", "isolation", "lonely", "loneliness", "alone", "disconnected",
+  "no one to talk to", "no friends", "haven't talked to anyone", "cut off",
+];
+
+/** Local, deterministic — same philosophy as assessSignal: this is a
+ * safety/routing judgment, not something to hand to the model. */
+export function needsConnection(text = "") {
+  const lower = text.toLowerCase();
+  return CONNECTION_WORDS.some((word) => lower.includes(word));
 }
