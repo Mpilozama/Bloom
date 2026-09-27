@@ -105,6 +105,7 @@ function App() {
   const [idleMoment, setIdleMoment] = useState(null);
   const [connectionFlag, setConnectionFlag] = useState(false);
   const breathTimeoutRef = useRef(null);
+  const lastCheckin = [...history].reverse().find((entry) => entry.type === "checkin");
 
   useEffect(() => {
     const timer = setTimeout(() => setNoticed(true), 700);
@@ -586,21 +587,30 @@ function App() {
                     <span className="text-sm text-[var(--moss)]">{new Date().toLocaleDateString()}</span>
                   </div>
 
-                  <div className="mt-3 flex items-center gap-3">
-                    <span className="text-3xl">
-                      {customFeeling === "Pretty okay" && "😌"}
-                      {customFeeling === "A bit off" && "😐"}
-                      {customFeeling === "Running low" && "😮‍💨"}
-                      {customFeeling === "Honestly... rough" && "🫠"}
-                      {!PRESET_FEELINGS.some((p) => p.label === customFeeling) && "🌱"}
-                    </span>
-                    <div>
-                      <p className="font-medium text-[var(--canopy-dark)]">{customFeeling || "Getting to know you"}</p>
-                      <p className="text-xs text-[var(--moss)]">
-                        {customFeeling ? "That's what you shared" : "No data yet"}
-                      </p>
+                 <div className="mt-5 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-[var(--moss)]">Last check-in</span>
+                      <span className="text-sm text-[var(--moss)]">
+                        {lastCheckin ? new Date(lastCheckin.date).toLocaleDateString() : "—"}
+                      </span>
+                    </div>
+
+                    <div className="mt-3 flex items-center gap-3">
+                      <span className="text-3xl">
+                        {lastCheckin?.feeling === "Pretty okay" && "😌"}
+                        {lastCheckin?.feeling === "A bit off" && "😐"}
+                        {lastCheckin?.feeling === "Running low" && "😮‍💨"}
+                        {lastCheckin?.feeling === "Honestly... rough" && "🫠"}
+                        {lastCheckin && !PRESET_FEELINGS.some((p) => p.label === lastCheckin.feeling) && "🌱"}
+                        {!lastCheckin && "🌱"}
+                      </span>
+                      <div>
+                        <p className="font-medium text-[var(--canopy-dark)]">{lastCheckin?.feeling || "Getting to know you"}</p>
+                        <p className="text-xs text-[var(--moss)]">{lastCheckin ? "That's what you shared" : "No check-ins yet"}</p>
+                      </div>
                     </div>
                   </div>
+                  
                 </div>
 
                 <div className="mt-5 flex flex-wrap gap-3">
