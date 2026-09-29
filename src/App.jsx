@@ -110,6 +110,7 @@ function App() {
   const [awayNote] = useState(() => checkInOnTheWorld());
   const [idleMoment, setIdleMoment] = useState(null);
   const [connectionFlag, setConnectionFlag] = useState(false);
+  const [noticeAnswers, setNoticeAnswers] = useState({ see: "", hear: "", feel: "" });
   const breathTimeoutRef = useRef(null);
   const lastCheckin = [...history].reverse().find((entry) => entry.type === "checkin");
 
@@ -156,6 +157,11 @@ function App() {
     setWritePrompt(WRITE_PROMPTS[Math.floor(Math.random() * WRITE_PROMPTS.length)]);
     setScreen("activity-write");
   };
+
+  const openActivityNotice = () => {
+    setNoticeAnswers({ see: "", hear: "", feel: "" });
+    setScreen("activity-notice");
+  };  
 
   const openActivityReachOut = () => {
     setReachOutPrompt(REACH_OUT_PROMPTS[Math.floor(Math.random() * REACH_OUT_PROMPTS.length)]);
@@ -676,7 +682,7 @@ function App() {
                   </button>
 
                   <button
-                    onClick={() => setScreen("activity-notice")}
+                    onClick={openActivityNotice}
                     className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
                   >
                     <div className="flex items-center gap-3">
@@ -793,22 +799,38 @@ function App() {
                   <input
                     type="text"
                     placeholder="Something you can see..."
+                    value={noticeAnswers.see}
+                    onChange={(e) => setNoticeAnswers((prev) => ({ ...prev, see: e.target.value }))}
                     className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
+                    autoFocus
                   />
-                  <input
-                    type="text"
-                    placeholder="Something you can hear..."
-                    className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Something you can feel..."
-                    className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
-                  />
+                  {noticeAnswers.see && (
+                    <input
+                      type="text"
+                      placeholder="Something you can hear..."
+                      value={noticeAnswers.hear}
+                      onChange={(e) => setNoticeAnswers((prev) => ({ ...prev, hear: e.target.value }))}
+                      className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20 animate-fadeIn"
+                      autoFocus
+                    />
+                  )}
+                  {noticeAnswers.hear && (
+                    <input
+                      type="text"
+                      placeholder="Something you can feel..."
+                      value={noticeAnswers.feel}
+                      onChange={(e) => setNoticeAnswers((prev) => ({ ...prev, feel: e.target.value }))}
+                      className="w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20 animate-fadeIn"
+                      autoFocus
+                    />
+                  )}
                 </div>
 
                 <button
-                  onClick={() => completeActivity("notice")}
+                  onClick={() => {
+                    const parts = [noticeAnswers.see, noticeAnswers.hear, noticeAnswers.feel].filter(Boolean);
+                    completeActivity("notice", { content: parts.join(" · ") || undefined });
+                  }}
                   className="mt-6 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
                 >
                   That helped
