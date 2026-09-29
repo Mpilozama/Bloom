@@ -20,6 +20,7 @@ const PRESET_SEVERITY = {
   "honestly... rough": 3,
 };
 
+
 const LOW_SIGNAL_WORDS = [
   "running low", "rough", "tired", "exhausted", "empty", "numb",
   "overwhelmed", "anxious", "off", "low", "drained", "stressed",
@@ -94,4 +95,49 @@ const CONNECTION_WORDS = [
 export function needsConnection(text = "") {
   const lower = text.toLowerCase();
   return CONNECTION_WORDS.some((word) => lower.includes(word));
+}
+
+
+/**
+ * REFLECT, made real: looks across recent history for a pattern worth
+ * surfacing — never a verdict, never phrased as certainty. Deliberately
+ * local and deterministic, same reasoning as assessSignal: noticing a
+ * pattern in someone's data is a judgment call, not something to hand
+ * to a model and hope it stays calibrated.
+ *
+ * Returns null when there isn't enough data or nothing stands out —
+ * silence is a valid, correct output here, not a fallback to avoid.
+ */
+export function reflectOnPatterns(history) {
+  if (history.length < 3) return null;
+
+  const recent = history.slice(-8);
+  const completed = recent.filter((e) => e.type !== "abandoned" && e.type !== "checkin");
+  const abandoned = recent.filter((e) => e.type === "abandoned");
+  const reachOuts = recent.filter((e) => e.type === "reach-out");
+
+  if (reachOuts.length >= 2) {
+    return `You've reached out to people ${reachOuts.length} times recently. That's not something I can take credit for — that's you, out in your actual life.`;
+  }
+
+  const counts = completed.reduce((acc, entry) => {
+    acc[entry.type] = (acc[entry.type] || 0) + 1;
+    return acc;
+  }, {});
+  const favorite = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+
+  if (favorite && favorite[1] >= 3) {
+    const labels = {
+      breath: "a slow breath",
+      notice: "grounding yourself",
+      write: "writing things out",
+    };
+    return `You've reached for ${labels[favorite[0]] || favorite[0]} more than anything else lately. Worth noticing, not worth reading too much into.`;
+  }
+
+  if (abandoned.length >= 3 && completed.length === 0) {
+    return "You've opened a few things lately and stepped away before finishing. That's completely fine — sometimes starting is the whole point.";
+  }
+
+  return null;
 }

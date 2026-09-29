@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Garden from "./components/garden/Garden.jsx";
 import ActivityHistory from "./components/ActivityHistory.jsx";
 import { getBloomResponse } from "./service/ai.js";
-import { assessSignal, summarizeHistory, needsConnection } from "./service/signals.js";
+import { assessSignal, summarizeHistory, needsConnection, reflectOnPatterns } from "./service/signals.js";
 import { getTimeOfDay, WORLD_SKY, checkInOnTheWorld, getIdleMoment, getGardenDiscovery } from "./service/world.js";
 
 const PRESET_FEELINGS = [
@@ -116,6 +116,7 @@ function App() {
   const [reachOutMessage, setReachOutMessage] = useState(""); 
   const breathTimeoutRef = useRef(null);
   const lastCheckin = [...history].reverse().find((entry) => entry.type === "checkin");
+  const reflection = reflectOnPatterns(history);
 
   useEffect(() => {
     const timer = setTimeout(() => setNoticed(true), 700);
@@ -607,6 +608,7 @@ function App() {
                     </span>
                   </div>
 
+
                   <div className="mt-3 flex items-center gap-3">
                     <span className="text-3xl">
                       {lastCheckin?.feeling === "Pretty okay" && "😌"}
@@ -622,6 +624,14 @@ function App() {
                     </div>
                   </div>
                 </div>
+                
+                {reflection && (
+                  <div className="mt-4 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-5">
+                    <p className="text-sm font-medium text-[var(--moss)]">🌿 Bloom's noticed</p>
+                    <p className="mt-1 text-sm leading-relaxed text-[var(--canopy-dark)]">{reflection}</p>
+                  </div>
+                )}
+
 
                 <div className="mt-5 flex flex-wrap gap-3">
                   <button
