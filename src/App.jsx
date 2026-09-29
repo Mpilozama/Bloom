@@ -12,6 +12,12 @@ const PRESET_FEELINGS = [
   { emoji: "🫠", label: "Honestly... rough" },
 ];
 
+const BREATH_PHASES = [
+  { name: "inhale", ms: 4000 },
+  { name: "hold", ms: 4000 },
+  { name: "exhale", ms: 6000 },
+];
+
 const WRITE_PROMPTS = [
   "What's one thing that happened today that you haven't said out loud yet?",
   "What's taking up the most space in your head right now?",
@@ -119,18 +125,16 @@ function App() {
 
   useEffect(() => {
     if (screen !== "activity-breath") return undefined;
-
-    const sequence = ["inhale", "hold", "exhale"];
     let index = 0;
 
     const advance = () => {
-      index = (index + 1) % sequence.length;
+      index = (index + 1) % BREATH_PHASES.length;
       if (index === 0) setBreathCycles((c) => c + 1);
-      setBreathPhase(sequence[index]);
-      breathTimeoutRef.current = setTimeout(advance, 4000);
+      setBreathPhase(BREATH_PHASES[index].name);
+      breathTimeoutRef.current = setTimeout(advance, BREATH_PHASES[index].ms);
     };
 
-    breathTimeoutRef.current = setTimeout(advance, 4000);
+    breathTimeoutRef.current = setTimeout(advance, BREATH_PHASES[0].ms);
     return () => clearTimeout(breathTimeoutRef.current);
   }, [screen]);
 
@@ -232,8 +236,8 @@ function App() {
     setShowTyping(false);
   };
 
-  const completeActivity = (type) => {
-    addHistoryEntry({ type, date: new Date().toISOString(), feeling: customFeeling });
+  const completeActivity = (type, detail = {}) => {
+    addHistoryEntry({ type, date: new Date().toISOString(), feeling: customFeeling, ...detail });
     setScreen("progress");
   };
 
@@ -584,33 +588,25 @@ function App() {
                 <div className="mt-5 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-5">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-[var(--moss)]">Last check-in</span>
-                    <span className="text-sm text-[var(--moss)]">{new Date().toLocaleDateString()}</span>
+                    <span className="text-sm text-[var(--moss)]">
+                      {lastCheckin ? new Date(lastCheckin.date).toLocaleDateString() : "—"}
+                    </span>
                   </div>
 
-                 <div className="mt-5 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-[var(--moss)]">Last check-in</span>
-                      <span className="text-sm text-[var(--moss)]">
-                        {lastCheckin ? new Date(lastCheckin.date).toLocaleDateString() : "—"}
-                      </span>
-                    </div>
-
-                    <div className="mt-3 flex items-center gap-3">
-                      <span className="text-3xl">
-                        {lastCheckin?.feeling === "Pretty okay" && "😌"}
-                        {lastCheckin?.feeling === "A bit off" && "😐"}
-                        {lastCheckin?.feeling === "Running low" && "😮‍💨"}
-                        {lastCheckin?.feeling === "Honestly... rough" && "🫠"}
-                        {lastCheckin && !PRESET_FEELINGS.some((p) => p.label === lastCheckin.feeling) && "🌱"}
-                        {!lastCheckin && "🌱"}
-                      </span>
-                      <div>
-                        <p className="font-medium text-[var(--canopy-dark)]">{lastCheckin?.feeling || "Getting to know you"}</p>
-                        <p className="text-xs text-[var(--moss)]">{lastCheckin ? "That's what you shared" : "No check-ins yet"}</p>
-                      </div>
+                  <div className="mt-3 flex items-center gap-3">
+                    <span className="text-3xl">
+                      {lastCheckin?.feeling === "Pretty okay" && "😌"}
+                      {lastCheckin?.feeling === "A bit off" && "😐"}
+                      {lastCheckin?.feeling === "Running low" && "😮‍💨"}
+                      {lastCheckin?.feeling === "Honestly... rough" && "🫠"}
+                      {lastCheckin && !PRESET_FEELINGS.some((p) => p.label === lastCheckin.feeling) && "🌱"}
+                      {!lastCheckin && "🌱"}
+                    </span>
+                    <div>
+                      <p className="font-medium text-[var(--canopy-dark)]">{lastCheckin?.feeling || "Getting to know you"}</p>
+                      <p className="text-xs text-[var(--moss)]">{lastCheckin ? "That's what you shared" : "No check-ins yet"}</p>
                     </div>
                   </div>
-                  
                 </div>
 
                 <div className="mt-5 flex flex-wrap gap-3">
@@ -737,6 +733,11 @@ function App() {
               <div className="panel p-8 text-center">
                 <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Follow the circle</p>
                 <p className="mt-2 text-sm text-[var(--moss)]">Cycle {breathCycles}. Stop whenever feels right.</p>
+                {breathCycles >= 4 && (
+                  <p className="mt-1 text-xs text-[var(--moss)]/70">
+                    Four rounds is usually plenty — keep going if it's helping, or stop anytime.
+                  </p>
+                )}
 
                 <div className="mx-auto mt-6 flex h-44 w-44 items-center justify-center rounded-full border-4 border-[var(--moss)]/20">
                   <div
@@ -747,7 +748,7 @@ function App() {
                         breathPhase === "inhale"
                           ? "breatheIn 4s ease-in-out forwards"
                           : breathPhase === "exhale"
-                            ? "breatheOut 4s ease-in-out forwards"
+                            ? "breatheOut 6s ease-in-out forwards"
                             : "none",
                       transform: breathPhase === "hold" ? "scale(1)" : undefined,
                     }}
@@ -761,7 +762,7 @@ function App() {
                 </p>
 
                 <button
-                  onClick={() => completeActivity("breath")}
+                  onClick={() => completeActivity("breath", { cycles: breathCycles })}
                   className="mt-6 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
                 >
                   I'm good, that helped
