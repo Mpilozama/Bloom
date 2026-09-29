@@ -111,6 +111,8 @@ function App() {
   const [idleMoment, setIdleMoment] = useState(null);
   const [connectionFlag, setConnectionFlag] = useState(false);
   const [noticeAnswers, setNoticeAnswers] = useState({ see: "", hear: "", feel: "" });
+  const [reachOutTo, setReachOutTo] = useState("");
+  const [reachOutMessage, setReachOutMessage] = useState(""); 
   const breathTimeoutRef = useRef(null);
   const lastCheckin = [...history].reverse().find((entry) => entry.type === "checkin");
 
@@ -164,7 +166,10 @@ function App() {
   };  
 
   const openActivityReachOut = () => {
-    setReachOutPrompt(REACH_OUT_PROMPTS[Math.floor(Math.random() * REACH_OUT_PROMPTS.length)]);
+    const prompt = REACH_OUT_PROMPTS[Math.floor(Math.random() * REACH_OUT_PROMPTS.length)];
+    setReachOutPrompt(prompt);
+    setReachOutTo("");
+    setReachOutMessage(prompt);
     setScreen("activity-reach-out");
   };
 
@@ -898,16 +903,33 @@ function App() {
                 <input
                   type="text"
                   placeholder="Who haven't you spoken to in a while?"
+                  value={reachOutTo}
+                  onChange={(e) => setReachOutTo(e.target.value)}
                   className="mt-4 w-full rounded-xl border-2 border-[var(--paper-line)] bg-[var(--mist)]/40 px-4 py-3 text-[var(--ink)] placeholder:text-[var(--moss)]/50 focus:border-[var(--moss)] focus:outline-none focus:ring-2 focus:ring-[var(--moss)]/20"
                 />
 
                 <div className="mt-4 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
-                  <p className="text-xs font-medium text-[var(--moss)]">A starting point, if it helps:</p>
-                  <p className="mt-1 text-sm italic text-[var(--canopy-dark)]">"{reachOutPrompt}"</p>
+                  <p className="text-xs font-medium text-[var(--moss)]">A starting point — make it yours:</p>
+                  <textarea
+                    value={reachOutMessage}
+                    onChange={(e) => setReachOutMessage(e.target.value)}
+                    rows="3"
+                    className="mt-2 w-full resize-none rounded-xl border border-[var(--paper-line)] bg-white/70 px-3 py-2 text-sm text-[var(--canopy-dark)] focus:border-[var(--moss)] focus:outline-none"
+                  />
+                  <button
+                    onClick={() => navigator.clipboard?.writeText(reachOutMessage)}
+                    className="mt-2 text-xs font-medium text-[var(--moss)] underline-offset-2 hover:underline"
+                  >
+                    Copy message
+                  </button>
                 </div>
 
                 <button
-                  onClick={() => completeActivity("reach-out")}
+                  onClick={() =>
+                    completeActivity("reach-out", {
+                      content: [reachOutTo && `to ${reachOutTo}`, reachOutMessage].filter(Boolean).join(" — "),
+                    })
+                  }
                   className="mt-5 w-full rounded-full bg-[var(--canopy)] px-8 py-4 font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--canopy-dark)] active:scale-95"
                 >
                   I'll reach out
