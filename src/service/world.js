@@ -107,3 +107,35 @@ export function checkInOnTheWorld() {
 
   return LONG_AWAY_EVENTS[Math.floor(Math.random() * LONG_AWAY_EVENTS.length)];
 }
+
+
+const MILESTONE_KEY_PREFIX = "bloom_milestone_seen_";
+
+const GARDEN_DISCOVERIES = {
+  3: "Bloom's been dragging little stones over — looks like it's building something by the roots.",
+  6: "There's a tiny birdhouse in the garden now. Bloom must have been working on it while you were away.",
+  10: "Bloom strung up a little row of lanterns along the path. No idea when that happened.",
+};
+
+/**
+ * Returns a one-time "Bloom's been up to something" note the first time the
+ * person crosses a moment-count milestone. Never repeats, never implies the
+ * user did anything wrong for not being here — it's just Bloom's own small,
+ * ongoing project continuing in the background (Compass §14).
+ */
+export function getGardenDiscovery(completionCount) {
+  const milestone = Object.keys(GARDEN_DISCOVERIES)
+    .map(Number)
+    .sort((a, b) => b - a)
+    .find((count) => completionCount >= count);
+  if (!milestone) return null;
+
+  const seenKey = `${MILESTONE_KEY_PREFIX}${milestone}`;
+  try {
+    if (localStorage.getItem(seenKey)) return null;
+    localStorage.setItem(seenKey, "true");
+  } catch {
+    return null;
+  }
+  return GARDEN_DISCOVERIES[milestone];
+}

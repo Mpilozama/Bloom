@@ -3,7 +3,7 @@ import Garden from "./components/garden/Garden.jsx";
 import ActivityHistory from "./components/ActivityHistory.jsx";
 import { getBloomResponse } from "./service/ai.js";
 import { assessSignal, summarizeHistory, needsConnection } from "./service/signals.js";
-import { getTimeOfDay, WORLD_SKY, checkInOnTheWorld, getIdleMoment } from "./service/world.js";
+import { getTimeOfDay, WORLD_SKY, checkInOnTheWorld, getIdleMoment, getGardenDiscovery } from "./service/world.js";
 
 const PRESET_FEELINGS = [
   { emoji: "😌", label: "Pretty okay" },
@@ -110,6 +110,7 @@ function App() {
   const [awayNote] = useState(() => checkInOnTheWorld());
   const [idleMoment, setIdleMoment] = useState(null);
   const [connectionFlag, setConnectionFlag] = useState(false);
+  const [gardenDiscovery, setGardenDiscovery] = useState(null);
   const [noticeAnswers, setNoticeAnswers] = useState({ see: "", hear: "", feel: "" });
   const [reachOutTo, setReachOutTo] = useState("");
   const [reachOutMessage, setReachOutMessage] = useState(""); 
@@ -193,7 +194,9 @@ function App() {
 
   const navigate = (key) => {
     if (key === "garden") {
-      setScreen(history.length === 0 ? "empty-state" : "progress");
+      const nextScreen = history.length === 0 ? "empty-state" : "progress";
+      if (nextScreen === "progress") setGardenDiscovery(getGardenDiscovery(history.length));
+      setScreen(nextScreen);
       return;
     }
     setScreen(key);
@@ -953,6 +956,12 @@ function App() {
               <div className="panel p-8">
                 <p className="font-display text-2xl font-medium text-[var(--canopy-dark)]">Your garden</p>
                 <p className="mt-1 text-sm text-[var(--moss)]">Not about streaks. Just moments you showed up.</p>
+
+                {gardenDiscovery && (
+                  <div className="mb-4 mt-5 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/60 p-4 text-center animate-fadeIn">
+                    <p className="text-sm text-[var(--moss)]">🌿 {gardenDiscovery}</p>
+                  </div>
+                )}
 
                 <div className="mt-5">
                   <Garden completed={history.length > 0} completionCount={history.length} timeOfDay={timeOfDay} />
