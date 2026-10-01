@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Garden from "./components/garden/Garden.jsx";
 import ActivityHistory from "./components/ActivityHistory.jsx";
 import { getBloomResponse } from "./service/ai.js";
-import { assessSignal, summarizeHistory, needsConnection, reflectOnPatterns } from "./service/signals.js";
+import { assessSignal, summarizeHistory, needsConnection, reflectOnPatterns, rankActivities } from "./service/signals.js";
 import { getTimeOfDay, WORLD_SKY, checkInOnTheWorld, getIdleMoment, getGardenDiscovery } from "./service/world.js";
 
 const PRESET_FEELINGS = [
@@ -39,6 +39,14 @@ const NAV_ITEMS = [
   { key: "history", icon: "📖", label: "History" },
   { key: "settings", icon: "⚙️", label: "Settings" },
 ];
+
+
+const ACTIVITY_CARDS = {
+  write: { icon: "✍️", title: "A few words", subtitle: "A gentle prompt, if you'd like one" },
+  notice: { icon: "👀", title: "Ground yourself", subtitle: "One thing you see, hear, and feel" },
+  "reach-out": { icon: "📮", title: "Reach out to someone", subtitle: "Sometimes a person helps more than I can" },
+  breath: { icon: "🌬️", title: "A slow breath", subtitle: "One guided cycle. No pressure." },
+};
 
 function loadStoredHistory() {
   try {
@@ -624,7 +632,7 @@ function App() {
                     </div>
                   </div>
                 </div>
-                
+
                 {reflection && (
                   <div className="mt-4 rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-5">
                     <p className="text-sm font-medium text-[var(--moss)]">🌿 Bloom's noticed</p>

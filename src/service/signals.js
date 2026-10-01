@@ -141,3 +141,23 @@ export function reflectOnPatterns(history) {
 
   return null;
 }
+
+/**
+ * Ranks activity types by what's actually helped this person before —
+ * completed more than abandoned — so suggestions adapt to the individual
+ * instead of a fixed order. Never hides an option, only reorders; every
+ * choice is still visible and pickable regardless of rank.
+ */
+export function rankActivities(history, types) {
+  const scores = types.reduce((acc, type) => ({ ...acc, [type]: 0 }), {});
+
+  history.forEach((entry) => {
+    if (entry.type === "abandoned" && scores[entry.activityType] !== undefined) {
+      scores[entry.activityType] -= 1;
+    } else if (scores[entry.type] !== undefined) {
+      scores[entry.type] += 1;
+    }
+  });
+
+  return [...types].sort((a, b) => scores[b] - scores[a]);
+}
