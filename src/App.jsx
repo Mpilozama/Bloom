@@ -40,7 +40,6 @@ const NAV_ITEMS = [
   { key: "settings", icon: "⚙️", label: "Settings" },
 ];
 
-
 const ACTIVITY_CARDS = {
   write: { icon: "✍️", title: "A few words", subtitle: "A gentle prompt, if you'd like one" },
   notice: { icon: "👀", title: "Ground yourself", subtitle: "One thing you see, hear, and feel" },
@@ -121,10 +120,12 @@ function App() {
   const [gardenDiscovery, setGardenDiscovery] = useState(null);
   const [noticeAnswers, setNoticeAnswers] = useState({ see: "", hear: "", feel: "" });
   const [reachOutTo, setReachOutTo] = useState("");
-  const [reachOutMessage, setReachOutMessage] = useState(""); 
+  const [reachOutMessage, setReachOutMessage] = useState("");
   const breathTimeoutRef = useRef(null);
+
   const lastCheckin = [...history].reverse().find((entry) => entry.type === "checkin");
   const reflection = reflectOnPatterns(history);
+  const activityOrder = rankActivities(history, ["write", "notice", "reach-out", "breath"]);
 
   useEffect(() => {
     const timer = setTimeout(() => setNoticed(true), 700);
@@ -173,7 +174,7 @@ function App() {
   const openActivityNotice = () => {
     setNoticeAnswers({ see: "", hear: "", feel: "" });
     setScreen("activity-notice");
-  };  
+  };
 
   const openActivityReachOut = () => {
     const prompt = REACH_OUT_PROMPTS[Math.floor(Math.random() * REACH_OUT_PROMPTS.length)];
@@ -181,6 +182,13 @@ function App() {
     setReachOutTo("");
     setReachOutMessage(prompt);
     setScreen("activity-reach-out");
+  };
+
+  const openActivity = (type) => {
+    if (type === "write") return openActivityWrite();
+    if (type === "notice") return openActivityNotice();
+    if (type === "reach-out") return openActivityReachOut();
+    if (type === "breath") return openActivityBreath();
   };
 
   const addHistoryEntry = (entry) => {
@@ -218,7 +226,8 @@ function App() {
     setShowTyping(true);
     setScreen("reflection");
 
-    const responseText = await getBloomResponse(feelingText, summarizeHistory(history));
+    const context = [summarizeHistory(history), reflectOnPatterns(history)].filter(Boolean).join(" | ");
+    const responseText = await getBloomResponse(feelingText, context);
     setConversation((prev) => [...prev, { role: "bloom", text: responseText }]);
     setShowTyping(false);
 
@@ -252,7 +261,7 @@ function App() {
       .slice(-4)
       .map((m) => `${m.role === "user" ? "Person" : "Bloom"}: ${m.text}`)
       .join(" | ");
-    const context = [summarizeHistory(history), snippet].filter(Boolean).join(" | ");
+    const context = [summarizeHistory(history), reflectOnPatterns(history), snippet].filter(Boolean).join(" | ");
 
     const responseText = await getBloomResponse(reply, context);
     setConversation((prev) => [...prev, { role: "bloom", text: responseText }]);
@@ -616,7 +625,6 @@ function App() {
                     </span>
                   </div>
 
-
                   <div className="mt-3 flex items-center gap-3">
                     <span className="text-3xl">
                       {lastCheckin?.feeling === "Pretty okay" && "😌"}
@@ -639,7 +647,6 @@ function App() {
                     <p className="mt-1 text-sm leading-relaxed text-[var(--canopy-dark)]">{reflection}</p>
                   </div>
                 )}
-
 
                 <div className="mt-5 flex flex-wrap gap-3">
                   <button
@@ -694,57 +701,24 @@ function App() {
                 )}
 
                 <div className="mt-5 space-y-3">
-                  <button
-                    onClick={openActivityWrite}
-                    className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">✍️</span>
-                      <div>
-                        <p className="font-medium text-[var(--canopy-dark)]">A few words</p>
-                        <p className="text-sm text-[var(--moss)]">A gentle prompt, if you'd like one</p>
-                      </div>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={openActivityNotice}
-                    className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">👀</span>
-                      <div>
-                        <p className="font-medium text-[var(--canopy-dark)]">Ground yourself</p>
-                        <p className="text-sm text-[var(--moss)]">One thing you see, hear, and feel</p>
-                      </div>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={openActivityReachOut}
-                    className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">📮</span>
-                      <div>
-                        <p className="font-medium text-[var(--canopy-dark)]">Reach out to someone</p>
-                        <p className="text-sm text-[var(--moss)]">Sometimes a person helps more than I can</p>
-                      </div>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={openActivityBreath}
-                    className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">🌬️</span>
-                      <div>
-                        <p className="font-medium text-[var(--canopy-dark)]">A slow breath</p>
-                        <p className="text-sm text-[var(--moss)]">One guided cycle. No pressure.</p>
-                      </div>
-                    </div>
-                  </button>
+                  {activityOrder.map((type) => {
+                    const card = ACTIVITY_CARDS[type];
+                    return (
+                      <button
+                        key={type}
+                        onClick={() => openActivity(type)}
+                        className="w-full rounded-2xl border border-[var(--paper-line)] bg-[var(--paper)] p-4 text-left transition-all hover:-translate-y-0.5 hover:border-[var(--moss)] hover:bg-[var(--mist)]"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{card.icon}</span>
+                          <div>
+                            <p className="font-medium text-[var(--canopy-dark)]">{card.title}</p>
+                            <p className="text-sm text-[var(--moss)]">{card.subtitle}</p>
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <button
