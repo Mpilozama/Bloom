@@ -564,7 +564,7 @@ function App() {
                 {showTyping ? "···" : conversation[conversation.length - 1]?.text}
               </p>
 
-              {conversation.filter((m) => m.role === "user").length < 2 && !showTyping && (
+              {conversation.filter((m) => m.role === "user").length < 3 && !showTyping && (
                 <div className="mt-3 flex gap-2">
                   <input
                     id="chat-reply-input"
@@ -595,6 +595,12 @@ function App() {
                   className="rounded-full border-2 border-[var(--paper-line)] px-4 py-2 text-sm font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
                 >
                   Just sit with me
+                </button>
+                <button
+                  onClick={() => setScreen("welcome")}
+                  className="rounded-full border-2 border-[var(--paper-line)] px-4 py-2 text-sm font-medium text-[var(--moss)] transition-all hover:bg-[var(--mist)]"
+                >
+                  That's enough for now
                 </button>
               </div>
             </div>
@@ -1026,7 +1032,7 @@ function App() {
                   <div className="rounded-2xl border border-[var(--paper-line)] bg-[var(--mist)]/40 p-4">
                     <p className="font-medium text-[var(--canopy-dark)]">🌱 About Bloom</p>
                     <p className="mt-1 text-sm text-[var(--moss)]">
-                      Bloom is a wellness companion, not a therapist. It doesn't diagnose — it helps you notice
+                      Bloom is a wellbeing companion, not a therapist. It doesn't diagnose — it helps you notice
                       patterns and take small steps that help you outside the app.
                     </p>
                   </div>
