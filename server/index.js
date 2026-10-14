@@ -1,6 +1,6 @@
 import express from "express";
-
-export const MODE = process.env.LAB_MODE === "secure" ? "secure" : "vulnerable";
+import { MODE } from "./config.js";
+import "./db.js";
 
 const app = express();
 app.use(express.json());
