@@ -3,12 +3,14 @@ import { MODE } from "./config.js";
 import "./db.js";
 import authRoutes from "./routes/auth.js";
 import journalRoutes from "./routes/journal.js";
+import adminRoutes from "./routes/admin.js";
 
 const app = express();
 app.use(express.json());
 
 app.use("/api", authRoutes);
 app.use("/api", journalRoutes);
+app.use("/api", adminRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, mode: MODE });
