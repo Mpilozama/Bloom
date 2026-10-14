@@ -2,11 +2,13 @@ import express from "express";
 import { MODE } from "./config.js";
 import "./db.js";
 import authRoutes from "./routes/auth.js";
+import journalRoutes from "./routes/journal.js";
 
 const app = express();
 app.use(express.json());
 
 app.use("/api", authRoutes);
+app.use("/api", journalRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, mode: MODE });
