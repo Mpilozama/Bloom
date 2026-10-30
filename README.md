@@ -1,5 +1,7 @@
 # Bloom 🌱
 
+Verification: WTC-NBEBZTD7
+
 ### Wellbeing that works for the person — not the streak.
 
 Bloom is an adaptive wellbeing companion designed to help people make meaningful improvements to their overall wellbeing without turning self-care into another responsibility.
@@ -445,3 +447,8 @@ The larger vision requires further research, testing, and iteration.
 
 > **The app should work for you.
 > You shouldn't have to work for the app.**
+
+
+
+
+
